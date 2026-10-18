@@ -128,6 +128,20 @@ body.no-maps .mapimg,body.no-maps .showmap{display:none}
 
 nav.tabs button em{font-style:normal;font-size:.68rem;font-weight:700;letter-spacing:.02em;opacity:.85;white-space:nowrap}
 .eyebrow{display:inline-block;font-size:.78rem;font-weight:700;color:var(--pink);background:var(--pink-soft);border-radius:999px;padding:2px 10px;margin-bottom:4px}
+
+.body.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+.sd summary{list-style:none;cursor:pointer;position:relative;padding-right:22px}
+.sd summary::-webkit-details-marker{display:none}
+.sd summary::after{content:"";position:absolute;right:4px;top:8px;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s}
+.sd[open] summary::after{transform:rotate(-135deg);top:12px}
+.sd summary:focus-visible{outline:2px solid var(--pink);outline-offset:2px;border-radius:6px}
+.sdc{padding-bottom:4px}
+.badge{display:inline-block;font-size:.68rem;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-left:6px;vertical-align:1px}
+.qnav{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:52px;min-height:48px;padding:6px 8px;border-radius:12px;background:var(--sea);color:#fff;text-decoration:none;font-size:.72rem;font-weight:700}
+.food .qnav{background:var(--pink)}
+.qnav svg{width:18px;height:18px}
+.expall{display:flex;gap:8px;justify-content:flex-end;margin:4px 0 2px}
+.expall button{font:inherit;font-size:.8rem;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:3px 12px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -296,19 +310,22 @@ const kindLabel={move:'交通',food:'吃',sight:'景點',stay:'住宿',note:'提
 function renderDay(d){
   let h=`<div class="eyebrow">${d.area}</div><h2>${d.tab}｜${d.h}</h2><p class="lead">${d.d}</p>`;
   h+=`<div class="stay"><span>🛏 ${esc(d.stay[0])}</span>${d.stay[1].nav?`<a class="nav" href="${navUrl(d.stay[1].nav)}" target="_blank" rel="noopener">${ic.nav}回飯店</a>`:''}</div>`;
-  h+=`<div class="flow">${esc(d.flow)}</div><ol class="timeline">`;
+  h+=`<div class="flow">${esc(d.flow)}</div><div class="expall"><button type="button" class="exp" data-open="1">全部展開</button><button type="button" class="exp" data-open="0">全部收合</button></div><ol class="timeline">`;
   for(const s of d.stops){
     const k=s.k==='stay'||s.k==='note'?'sight':s.k;
-    h+=`<li class="stop ${k}"><div class="time">${esc(s.t)}</div><div class="body">`;
-    h+=`<span class="kind">${kindLabel[s.k]}</span><div class="title">${esc(s.title)}</div>`;
-    if(s.sub) h+=`<div class="sub">${esc(s.sub)}</div>`;
-    h+=photoHtml(s.title);
-    if(s.nav) h+=mapImg(s.nav);
-    h+=buttons(s);
-    if(s.alts){h+='<div class="alts">';for(const a of s.alts){h+=`<div class="alt"><div class="an">${esc(a.n)}${a.s?`<small>${esc(a.s)}</small>`:''}</div>${photoHtml(a.n)}${a.nav?mapImg(a.nav):''}${buttons(a)}</div>`}h+='</div>'}
-    if(s.tip) h+=`<div class="tip">${s.tip}</div>`;
-    if(s.warn) h+=`<div class="warn">⚠️ ${esc(s.warn)}</div>`;
-    h+='</div></li>';
+    let c='';
+    c+=photoHtml(s.title);
+    if(s.nav) c+=mapImg(s.nav);
+    c+=buttons(s);
+    if(s.alts){c+='<div class="alts">';for(const a of s.alts){c+=`<div class="alt"><div class="an">${esc(a.n)}${a.s?`<small>${esc(a.s)}</small>`:''}</div>${photoHtml(a.n)}${a.nav?mapImg(a.nav):''}${buttons(a)}</div>`}c+='</div>'}
+    if(s.tip) c+=`<div class="tip">${s.tip}</div>`;
+    if(s.warn) c+=`<div class="warn">⚠️ ${esc(s.warn)}</div>`;
+    const badge=[s.alts?`${s.alts.length} 個選擇`:'',s.warn?'⚠️ 注意':''].filter(Boolean).map(b=>`<span class="badge">${b}</span>`).join('');
+    const head=`<span class="kind">${kindLabel[s.k]}</span>${badge}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}`;
+    const q=s.nav?`<a class="qnav" href="${navUrl(s.nav)}" target="_blank" rel="noopener" aria-label="導航到${esc(s.title)}">${ic.nav}<span>導航</span></a>`:'';
+    h+=`<li class="stop ${k}"><div class="time">${esc(s.t)}</div><div class="body row">`;
+    h+=c?`<details class="sd"><summary>${head}</summary><div class="sdc">${c}</div></details>`:`<div class="sd plain">${head}</div>`;
+    h+=q+'</div></li>';
   }
   h+='</ol>';
   if(d.note) h+=`<div class="note"><b>提醒</b><br>${d.note}</div>`;
@@ -466,6 +483,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.showmap');if(!b
   apply(on);
   b.addEventListener('click',()=>{on=!on;apply(on);try{localStorage.setItem('busan-show-'+k,on?'1':'0')}catch(e){}});
 });
+document.addEventListener('click',e=>{const b=e.target.closest('.exp');if(!b)return;const sec=b.closest('section');sec.querySelectorAll('details.sd').forEach(d=>d.open=b.dataset.open==='1');});
 /* checkboxes remembered on this phone */
 document.querySelectorAll('.check input').forEach(cb=>{
   try{cb.checked=localStorage.getItem('busan-'+cb.dataset.k)==='1'}catch(e){}
