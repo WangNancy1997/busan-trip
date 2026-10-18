@@ -118,6 +118,13 @@ img{max-width:100%}
 .photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;background:var(--sea-soft);max-width:100%}
 .photos:not(.two) img{aspect-ratio:16/10}
 .credit{font-size:.7rem;color:var(--muted);margin-top:3px}
+
+.toggles{display:flex;align-items:center;gap:8px;padding-block:10px 0;font-size:.85rem;color:var(--muted)}
+.toggles button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:4px 12px;cursor:pointer}
+.toggles button[aria-pressed="true"]{background:var(--sea-soft);color:var(--sea);border-color:transparent;font-weight:700}
+.toggles button[aria-pressed="true"]::before{content:"✓ "}
+body.no-photos .photos,body.no-photos .credit{display:none}
+body.no-maps .mapimg,body.no-maps .showmap{display:none}
 </style>
 </head>
 <body>
@@ -132,6 +139,7 @@ img{max-width:100%}
 
 <nav class="tabs" aria-label="分頁"><div class="wrap" id="tabs" role="tablist"></div></nav>
 
+<div class="toggles wrap"><span>顯示</span><button type="button" id="tgl-photos" aria-pressed="true">照片</button><button type="button" id="tgl-maps" aria-pressed="true">地圖</button></div>
 <main class="wrap" id="main"></main>
 
 <script>
@@ -139,6 +147,7 @@ const G='https://maps.app.goo.gl/';
 const NOTION='https://app.notion.com/p/326dbf55fa4480319a5cc0770c9d3173';
 const AGODA='https://www.agoda.com/zh-hk/h32612088/hotel/busan-kr.html?adults=4&rooms=1&checkIn=2026-10-23&los=2&currencyCode=TWD';
 const ic={
+  ig:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
   nav:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.7 11.3 12.7 2.3a1 1 0 0 0-1.4 0l-9 9a1 1 0 0 0 0 1.4l9 9a1 1 0 0 0 1.4 0l9-9a1 1 0 0 0 0-1.4ZM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5L14 14.5Z"/></svg>',
   pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
@@ -148,14 +157,17 @@ const searchUrl=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIC
 const embedUrl=q=>'https://maps.google.com/maps?q='+encodeURIComponent(q)+'&hl=zh-TW&z=16&output=embed';
 const mapImg=q=>`<iframe class="mapimg" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="地圖" src="${embedUrl(q)}"></iframe>`;
 const PB="https://www.busannavi.net/wp-content/uploads/";
-const PHOTOS={"甘川文化村・小王子": ["2017/12/24020545.jpg", "2024/12/gamchon.jpg"], "甘川洞文化村": ["2017/12/24020545.jpg"], "白淺灘文化村": ["2017/11/1-30.jpg", "2021/02/1.jpg"], "松島海上纜車": ["2017/09/25.jpg", "2017/09/23.jpg"], "廣安里海灘・夕陽與廣安大橋夜景": ["2017/09/1314273523_l26.jpg", "2017/09/1314273523_l2.jpg"], "廣安里沙灘": ["2017/09/1314273523_l26.jpg"], "廣安里無人機表演": ["2017/09/1314273523_l2.jpg"], "田浦咖啡街": ["2017/08/8-4.jpg", "2017/08/9-4.jpg"], "富平罐頭市場": ["2017/10/1319636256_l30.jpg"], "札嘎其市場": ["2017/08/25.jpg"], "SPA LAND 汗蒸幕": ["2017/12/1-51.jpg"], "SPA LAND": ["2017/12/1-51.jpg"], "海岸列車 松亭站 → 尾浦站": ["2020/10/BuluLinePark10.jpg"], "天空膠囊列車 尾浦 → 青沙浦": ["2020/10/BuluLinePark1.jpg", "2020/10/BuluLinePark6.jpg"], "海雲台膠囊列車": ["2020/10/BuluLinePark1.jpg"], "青沙浦拍照・韓版灌籃高手平交道": ["2020/10/BuluLinePark3.jpg", "2019/04/1-1.jpg"], "青沙浦站": ["2020/10/BuluLinePark3.jpg"], "逛海雲台・Olive Young": ["2017/09/1-4.jpg"]};
-const photoHtml=t=>{const p=PHOTOS[t];if(!p)return '';return `<div class="photos${p.length>1?' two':''}">${p.map(f=>`<img loading="lazy" src="${PB+f}" alt="${esc(t)}" onerror="this.remove()">`).join('')}</div><div class="credit">照片：BusanNavi 釜山旅遊網</div>`};
+const PHOTOS={"甘川文化村・小王子": ["2017/12/24020545.jpg", "2024/12/gamchon.jpg"], "甘川洞文化村": ["2017/12/24020545.jpg"], "白淺灘文化村": ["2017/11/1-30.jpg", "2021/02/1.jpg"], "松島海上纜車": ["2017/09/25.jpg", "2017/09/23.jpg"], "廣安里海灘・夕陽與廣安大橋夜景": ["2017/09/1314273523_l26.jpg", "2017/09/1314273523_l2.jpg"], "廣安里沙灘": ["2017/09/1314273523_l26.jpg"], "廣安里無人機表演": ["2017/09/1314273523_l2.jpg"], "田浦咖啡街": ["2017/08/8-4.jpg", "2017/08/9-4.jpg"], "富平罐頭市場": ["2017/10/1319636256_l30.jpg"], "札嘎其市場": ["2017/08/25.jpg"], "SPA LAND 汗蒸幕": ["2017/12/1-51.jpg"], "SPA LAND": ["2017/12/1-51.jpg"], "海岸列車 松亭站 → 尾浦站": ["2020/10/BuluLinePark10.jpg", "2022/03/beach-train1.jpg"], "天空膠囊列車 尾浦 → 青沙浦": ["2020/10/BuluLinePark1.jpg", "2020/10/BuluLinePark6.jpg"], "海雲台膠囊列車": ["2020/10/BuluLinePark1.jpg"], "青沙浦拍照・韓版灌籃高手平交道": ["2020/10/BuluLinePark3.jpg", "2019/04/1-1.jpg"], "青沙浦站": ["2020/10/BuluLinePark4.jpg"], "逛海雲台・Olive Young": ["2017/09/1-4.jpg"], "83獬豸": ["https://d2uja84sd90jmv.cloudfront.net/posts/SG4DhcvoAgg699uh_7QcEg/ms.jpg"], "83 獬豸 廣安里店": ["https://d2uja84sd90jmv.cloudfront.net/posts/SG4DhcvoAgg699uh_7QcEg/ms.jpg"], "松亭三代湯飯": ["https://d2uja84sd90jmv.cloudfront.net/posts/J_0yfoIF4I2VmFY2xabQkw/ms.jpg"], "松亭 3 代豬肉湯飯": ["https://d2uja84sd90jmv.cloudfront.net/posts/J_0yfoIF4I2VmFY2xabQkw/ms.jpg"], "EGG DROP 南浦洞店": ["https://d2uja84sd90jmv.cloudfront.net/posts/mFWOCpEJJ1TS3IJ6DF8W7g/ms.jpg"], "自然島鹽麵包・Miffy 專門店": ["https://d2uja84sd90jmv.cloudfront.net/posts/Fii3D1O62TYqse6n1ql2BA/ms.jpg"], "自然島鹽麵包": ["https://d2uja84sd90jmv.cloudfront.net/posts/Fii3D1O62TYqse6n1ql2BA/ms.jpg"], "密陽加山豬肉湯飯 凡一店": ["https://d2uja84sd90jmv.cloudfront.net/posts/LAUPBsxzQwWAuqtw5Y7xHA/ms.jpg"], "moody bread market": ["https://d2uja84sd90jmv.cloudfront.net/posts/nvxrrYx1Ano57a6JpABw8Q/ms.jpg"], "Your Type Jeonpo": ["https://d2uja84sd90jmv.cloudfront.net/posts/0W6IsV5lXIc6Py80_1eCZg/ms.jpg"], "Miffy Cafe Busan": ["https://d2uja84sd90jmv.cloudfront.net/posts/BQcrBRbn1A8FfYU7v1znNw/ms.jpg"], "workingholiday busan": ["https://d2uja84sd90jmv.cloudfront.net/posts/g2aO7bwyRDS6ONI9J4aMTw/ms.jpg"], "彥陽烤牛肉 釜山家": ["https://d2uja84sd90jmv.cloudfront.net/posts/bMznd3qSDRXuhTBkU0tciQ/ms.jpg"], "水邊最高豬肉湯飯": ["https://d2uja84sd90jmv.cloudfront.net/posts/R6b81t4MtYO_OORfPG2dTg/ms.jpg"], "水邊最高豬肉湯飯 新世界 Centum 店": ["https://d2uja84sd90jmv.cloudfront.net/posts/R6b81t4MtYO_OORfPG2dTg/ms.jpg"], "春夏秋冬 小麥麵 西面本店": ["https://d3faveac4f5evv.cloudfront.net/2-1318406942.jpg"], "螞蟻家辣炒章魚": ["2023/09/gaemi3.jpg", "2023/09/gaemi.jpg"], "螞蟻家（西面店）": ["2019/01/16.jpg", "2019/01/6-1.jpg"], "釜山 X the SKY": ["2022/03/x-sky3.jpg", "2022/03/x-sky4.jpg"], "X the Sky": ["2022/03/x-sky3.jpg"], "海岸列車 青沙浦 → 尾浦": ["2022/03/beach-train11.jpg"]};
+const photoHtml=t=>{const p=PHOTOS[t];if(!p)return '';return `<div class="photos${p.length>1?' two':''}">${p.map(f=>`<img loading="lazy" src="${/^https?:/.test(f)?f:PB+f}" alt="${esc(t)}" onerror="this.remove()">`).join('')}</div><div class="credit">網路照片僅供參考</div>`};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const IGOVR={'SPA LAND Centum City':'스파랜드','HILL SPA Haeundae':'힐스파','35.1776606,129.1972707':'호텔라온','Denbasta Central Hotel Seomyeon Busan':'','BUSAN X the SKY':'엑스더스카이','La Feuille Gwangalli':'라페이유','Liberta Cheongsapo':'리베르타청사포','workingholiday busan':'워킹홀리데이광안리','14wagon Jeonpo':'14wagon','moody bread market Jeonpo':'무디브레드마켓','Your Type Jeonpo':'유어타입전포','Miffy Cafe Busan':'미피카페부산','EL16.52 영도':'el1652','SD MEDIA 서면':'sdmedia','Tuoi Gelato Busan':'tuoigelato','Standard Bread Busan':'스탠다드브레드','DIART Busan':'디아트','P.ARK 영도':'피아크','Thrill on the Mug Busan':'스릴온더머그','김해국제공항 국제선':'김해공항'};
+const igTag=p=>{if(p.ig!==undefined)return p.ig;const q=p.nav;if(!q)return '';if(q in IGOVR)return IGOVR[q];if(/^[\d.,]+$/.test(q))return '';return q.replace(/[^\p{L}\p{N}]/gu,'')};
 function buttons(p){
   let h='';
   if(p.nav) h+=`<a class="nav" href="${navUrl(p.nav)}" target="_blank" rel="noopener">${ic.nav}導航</a>`;
   const m=p.map||(p.nav?searchUrl(p.nav):null);
   if(m) h+=`<a class="ghost" href="${m}" target="_blank" rel="noopener">${ic.pin}地圖・照片</a>`;
+  const tg=igTag(p); if(tg) h+=`<a class="ghost ig" href="https://www.instagram.com/explore/tags/${encodeURIComponent(tg)}/" target="_blank" rel="noopener">${ic.ig}IG 照片</a>`;
   if(p.link) h+=`<a class="ghost" href="${p.link[1]}" target="_blank" rel="noopener">${ic.ext}${esc(p.link[0])}</a>`;
   return h?`<div class="btns">${h}</div>`:'';
 }
@@ -178,6 +190,7 @@ const days=[
   {t:'傍晚',k:'sight',title:'廣安里海灘・夕陽與廣安大橋夜景',sub:'坐計程車去',nav:'광안리해수욕장',map:G+'nTMg8L8LVRdHjjWBA'},
   {t:'晚餐',k:'food',title:'廣安里附近晚餐',sub:'原本想吃：烤肉的男子 廣安里店／豚笑 廣安里店／彥陽烤牛肉 釜山家',
    alts:[
+    {n:'彥陽烤牛肉 釜山家',s:'原本想吃的燒肉',nav:'언양불고기 부산집',ig:'언양불고기부산집'},
     {n:'workingholiday busan',s:'義大利料理｜網友去三次釜山都吃｜9:00–22:30',map:G+'3j1AVFECCLD9iYBr7',nav:'workingholiday busan'},
     {n:'La Feuille',s:'網友推薦麵包店｜9:00–22:30',map:G+'4LpYUd2yrUJx9ECn9',nav:'La Feuille Gwangalli'},
     {n:'Gwanganmok 廣安木 廣安店',s:'網友推薦烤肉｜16:30–00:00',map:G+'oDvySWjdAHrHZDTf7',nav:'광안목 광안점'}]},
@@ -441,6 +454,15 @@ else {try{const s=localStorage.getItem('busan-tab');if(s&&all.some(t=>t.id===s))
 show(start,false);
 
 document.addEventListener('click',e=>{const b=e.target.closest('.showmap');if(!b)return;b.insertAdjacentHTML('afterend',mapImg(b.dataset.q));b.remove();});
+
+/* show/hide photos & maps, remembered on this phone */
+[['photos','tgl-photos'],['maps','tgl-maps']].forEach(([k,id])=>{
+  const b=document.getElementById(id);
+  const apply=on=>{document.body.classList.toggle('no-'+k,!on);b.setAttribute('aria-pressed',on)};
+  let on=true;try{on=localStorage.getItem('busan-show-'+k)!=='0'}catch(e){}
+  apply(on);
+  b.addEventListener('click',()=>{on=!on;apply(on);try{localStorage.setItem('busan-show-'+k,on?'1':'0')}catch(e){}});
+});
 /* checkboxes remembered on this phone */
 document.querySelectorAll('.check input').forEach(cb=>{
   try{cb.checked=localStorage.getItem('busan-'+cb.dataset.k)==='1'}catch(e){}
