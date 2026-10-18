@@ -125,6 +125,9 @@ img{max-width:100%}
 .toggles button[aria-pressed="true"]::before{content:"✓ "}
 body.no-photos .photos,body.no-photos .credit{display:none}
 body.no-maps .mapimg,body.no-maps .showmap{display:none}
+
+nav.tabs button em{font-style:normal;font-size:.68rem;font-weight:700;letter-spacing:.02em;opacity:.85;white-space:nowrap}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;color:var(--pink);background:var(--pink-soft);border-radius:999px;padding:2px 10px;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -176,7 +179,7 @@ const LAON={nav:'35.1776606,129.1972707',map:G+'iCcaED4jN4E8wfdz9'};
 const DENBASTA={nav:'Denbasta Central Hotel Seomyeon Busan',link:['Agoda 訂房',AGODA]};
 
 const days=[
-{id:'d1',date:'2026-10-21',tab:'Day 1',d:'10/21 三',h:'抵達釜山・汗蒸幕放鬆',
+{id:'d1',area:'海雲台・廣安里',date:'2026-10-21',tab:'Day 1',d:'10/21 三',h:'抵達釜山・汗蒸幕放鬆',
  stay:['拉昂酒店 Hotel Laon｜第 1 晚',LAON],
  flow:'金海機場 → SPA LAND 汗蒸幕 → 15:00 入住拉昂 → 計程車去廣安里看夕陽 → 附近晚餐',
  stops:[
@@ -197,7 +200,7 @@ const days=[
   {t:'備選',k:'sight',title:'釜山 X the SKY',sub:'時間充裕再去，太累就留到 Day 2',nav:'BUSAN X the SKY',map:G+'jUCb2vzWzJCFnBiR9'},
   {t:'夜',k:'note',title:'宵夜、超商，回飯店',sub:'結束後再看要買什麼、怎麼回去'}
  ]},
-{id:'d2',date:'2026-10-22',tab:'Day 2',d:'10/22 四',h:'海岸列車・天空膠囊列車',
+{id:'d2',area:'海岸列車',date:'2026-10-22',tab:'Day 2',d:'10/22 四',h:'海岸列車・天空膠囊列車',
  stay:['拉昂酒店 Hotel Laon｜第 2 晚',LAON],
  flow:'7:30 早餐 → 海岸列車 松亭→尾浦 → 尾浦吃飯逛街 → 16:30 膠囊列車 尾浦→青沙浦 → 海岸列車 青沙浦→尾浦 → 走到海雲台 → 60 秒炸雞 → 計程車回飯店',
  stops:[
@@ -221,7 +224,7 @@ const days=[
   {t:'宵夜',k:'food',title:'60 秒炸雞 外帶回飯店吃',sub:'搭計程車回飯店，順便買隔天早餐',map:G+'1t8ftJEqctGRM3bF6',nav:'60계치킨 해운대'}
  ],
  note:'膠囊列車與海岸列車建議事先預約、確認末班時間；尾浦與青沙浦之間要預留轉乘時間。'},
-{id:'d3',date:'2026-10-23',tab:'Day 3',d:'10/23 五',h:'甘川文化村・更換住宿',
+{id:'d3',area:'甘川・西面',date:'2026-10-23',tab:'Day 3',d:'10/23 五',h:'甘川文化村・更換住宿',
  stay:['西面登巴斯塔中央酒店｜第 1 晚',DENBASTA],
  flow:'05:00 跑步 → 早點退房 → 移動約 1 小時 → 西面新飯店寄放行李（可先買超商充飢）→ 午餐 → 甘川文化村 → 宵夜',
  stops:[
@@ -243,7 +246,7 @@ const days=[
     {n:'Olive Young Gwangbok Town',s:'釜山新開最大間',map:G+'XBBn3JHHKVtAG8J27',nav:'올리브영 광복타운'}]}
  ],
  note:'甘川文化村離西面有一段交通時間，建議上午先出發；富平罐頭市場可移到 Day 4，避免兩天重複。'},
-{id:'d4',date:'2026-10-24',tab:'Day 4',d:'10/24 六',h:'南浦洞・影島海景',
+{id:'d4',area:'影島・南浦',date:'2026-10-24',tab:'Day 4',d:'10/24 六',h:'南浦洞・影島海景',
  stay:['西面登巴斯塔中央酒店｜第 2 晚',DENBASTA],
  flow:'韋茜早上跑步／10 點出門吃早餐 → 白淺灘文化村、Miffy Cafe → 午餐 → 海景咖啡廳 → 松島海上纜車',
  stops:[
@@ -264,7 +267,7 @@ const days=[
     {n:'札嘎其市場',s:'100 號攤帝王蟹',nav:'자갈치시장'}]}
  ],
  note:'麵包甜點候選：Standard Bread、Who\'s Who MUMU、DIART 土耳其麵包（超想吃）、自然島鹽麵包、Tuoi Gelato（開心果、伯爵茶）。<br>影島、南浦洞、松島之間依實際位置排順序，避免來回折返。<br>今天週六有廣安里無人機表演（原筆記 20:00、22:00，出發前確認場次）。'},
-{id:'d5',date:'2026-10-25',tab:'Day 5',d:'10/25 日',h:'田浦咖啡街・回家',
+{id:'d5',area:'田浦・回家',date:'2026-10-25',tab:'Day 5',d:'10/25 日',h:'田浦咖啡街・回家',
  stay:['退房日｜18:55 起飛',DENBASTA],
  flow:'11:00 退房寄放行李 → 田浦咖啡街逛逛吃吃 → 回飯店拿行李（到機場約 40 分）→ 15:00 到機場 → 18:55 起飛',
  stops:[
@@ -291,7 +294,7 @@ const days=[
 const kindLabel={move:'交通',food:'吃',sight:'景點',stay:'住宿',note:'提醒'};
 
 function renderDay(d){
-  let h=`<h2>${d.tab}｜${d.h}</h2><p class="lead">${d.d}</p>`;
+  let h=`<div class="eyebrow">${d.area}</div><h2>${d.tab}｜${d.h}</h2><p class="lead">${d.d}</p>`;
   h+=`<div class="stay"><span>🛏 ${esc(d.stay[0])}</span>${d.stay[1].nav?`<a class="nav" href="${navUrl(d.stay[1].nav)}" target="_blank" rel="noopener">${ic.nav}回飯店</a>`:''}</div>`;
   h+=`<div class="flow">${esc(d.flow)}</div><ol class="timeline">`;
   for(const s of d.stops){
@@ -428,14 +431,14 @@ ${food.map(([area,list])=>`<details><summary>🍽 美食｜${esc(area)}</summary
 
 /* ---------- tabs ---------- */
 const tabsEl=document.getElementById('tabs'), mainEl=document.getElementById('main');
-const all=[{id:'info',tab:'行前',d:'資訊'},...days.map(d=>({id:d.id,tab:d.tab,d:d.d.split(' ')[0]}))];
+const all=[{id:'info',area:'出發前',tab:'行前',d:'資訊'},...days.map(d=>({id:d.id,area:d.area,tab:d.tab,d:d.d.split(' ')[0]}))];
 const now=new Date(); const todayStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 const todayDay=days.find(d=>d.date===todayStr);
 let html='';
 html+=`<section id="sec-info" role="tabpanel">${renderInfo()}</section>`;
 for(const d of days) html+=`<section id="sec-${d.id}" role="tabpanel" hidden>${renderDay(d)}</section>`;
 mainEl.innerHTML=html;
-tabsEl.innerHTML=all.map(t=>`<button role="tab" id="tab-${t.id}" data-id="${t.id}" aria-selected="false">${t.tab}${todayDay&&todayDay.id===t.id?'<span class="today">今天</span>':''}<small>${t.d}</small></button>`).join('');
+tabsEl.innerHTML=all.map(t=>`<button role="tab" id="tab-${t.id}" data-id="${t.id}" aria-selected="false"><em>${t.area}</em>${t.tab}${todayDay&&todayDay.id===t.id?'<span class="today">今天</span>':''}<small>${t.d}</small></button>`).join('');
 function show(id,scroll){
   for(const t of all){
     document.getElementById('sec-'+t.id).hidden=t.id!==id;
