@@ -176,6 +176,8 @@ body.no-maps .mapimg{display:none}
 .x{border:0;background:var(--bg);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1rem}
 .driver .pane{border-radius:0;max-height:none;height:100%;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:14px}
 .driver .ko{font-size:clamp(2rem,9vw,3.4rem);font-weight:700;line-height:1.25;word-break:keep-all;user-select:text}
+.driver .addr{font-size:clamp(1.15rem,5vw,1.6rem);font-weight:500;line-height:1.4;word-break:keep-all;user-select:text;background:var(--sea-soft);border-radius:12px;padding:10px 14px}
+.driver .addr.none{font-size:.95rem;color:var(--muted);background:transparent}
 .driver .zh{font-size:1.05rem;color:var(--muted)}
 .driver .say{font-size:1.5rem;font-weight:700;color:var(--sea)}
 .driver .say small{display:block;font-size:.85rem;color:var(--muted);font-weight:400}
@@ -211,6 +213,7 @@ body.no-maps .mapimg{display:none}
   <div class="pane">
     <div class="say">여기로 가 주세요<small>請載我到這裡</small></div>
     <div class="ko" id="dr-ko"></div>
+    <div class="addr" id="dr-addr"></div>
     <div class="zh" id="dr-zh"></div>
     <div class="acts"><a class="act n" id="dr-naver" target="_blank" rel="noopener">Naver 地圖</a><button type="button" class="act d" data-close>關閉</button></div>
   </div>
@@ -240,7 +243,7 @@ const PB="https://www.busannavi.net/wp-content/uploads/";
 const PHOTOS={"甘川文化村・小王子": ["2017/12/24020545.jpg", "2024/12/gamchon.jpg"], "甘川洞文化村": ["2017/12/24020545.jpg"], "白淺灘文化村": ["2017/11/1-30.jpg", "2021/02/1.jpg"], "松島海上纜車": ["2017/09/25.jpg", "2017/09/23.jpg"], "廣安里海灘・夕陽與廣安大橋夜景": ["2017/09/1314273523_l26.jpg", "2017/09/1314273523_l2.jpg"], "廣安里沙灘": ["2017/09/1314273523_l26.jpg"], "廣安里無人機表演": ["2017/09/1314273523_l2.jpg"], "田浦咖啡街": ["2017/08/8-4.jpg", "2017/08/9-4.jpg"], "富平罐頭市場": ["2017/10/1319636256_l30.jpg"], "札嘎其市場": ["2017/08/25.jpg"], "SPA LAND 汗蒸幕": ["2017/12/1-51.jpg"], "SPA LAND": ["2017/12/1-51.jpg"], "海岸列車 松亭站 → 尾浦站": ["2020/10/BuluLinePark10.jpg", "2022/03/beach-train1.jpg"], "天空膠囊列車 尾浦 → 青沙浦": ["2020/10/BuluLinePark1.jpg", "2020/10/BuluLinePark6.jpg"], "海雲台膠囊列車": ["2020/10/BuluLinePark1.jpg"], "青沙浦拍照・韓版灌籃高手平交道": ["2020/10/BuluLinePark3.jpg", "2019/04/1-1.jpg"], "青沙浦站": ["2020/10/BuluLinePark4.jpg"], "逛海雲台・Olive Young": ["2017/09/1-4.jpg"], "83獬豸": ["https://d2uja84sd90jmv.cloudfront.net/posts/SG4DhcvoAgg699uh_7QcEg/ms.jpg"], "83 獬豸 廣安里店": ["https://d2uja84sd90jmv.cloudfront.net/posts/SG4DhcvoAgg699uh_7QcEg/ms.jpg"], "松亭三代湯飯": ["https://d2uja84sd90jmv.cloudfront.net/posts/J_0yfoIF4I2VmFY2xabQkw/ms.jpg"], "松亭 3 代豬肉湯飯": ["https://d2uja84sd90jmv.cloudfront.net/posts/J_0yfoIF4I2VmFY2xabQkw/ms.jpg"], "EGG DROP 南浦洞店": ["https://d2uja84sd90jmv.cloudfront.net/posts/mFWOCpEJJ1TS3IJ6DF8W7g/ms.jpg"], "自然島鹽麵包・Miffy 專門店": ["https://d2uja84sd90jmv.cloudfront.net/posts/Fii3D1O62TYqse6n1ql2BA/ms.jpg"], "自然島鹽麵包": ["https://d2uja84sd90jmv.cloudfront.net/posts/Fii3D1O62TYqse6n1ql2BA/ms.jpg"], "密陽加山豬肉湯飯 凡一店": ["https://d2uja84sd90jmv.cloudfront.net/posts/LAUPBsxzQwWAuqtw5Y7xHA/ms.jpg"], "moody bread market": ["https://d2uja84sd90jmv.cloudfront.net/posts/nvxrrYx1Ano57a6JpABw8Q/ms.jpg"], "Your Type Jeonpo": ["https://d2uja84sd90jmv.cloudfront.net/posts/0W6IsV5lXIc6Py80_1eCZg/ms.jpg"], "Miffy Cafe Busan": ["https://d2uja84sd90jmv.cloudfront.net/posts/BQcrBRbn1A8FfYU7v1znNw/ms.jpg"], "workingholiday busan": ["https://d2uja84sd90jmv.cloudfront.net/posts/g2aO7bwyRDS6ONI9J4aMTw/ms.jpg"], "彥陽烤牛肉 釜山家": ["https://d2uja84sd90jmv.cloudfront.net/posts/bMznd3qSDRXuhTBkU0tciQ/ms.jpg"], "水邊最高豬肉湯飯": ["https://d2uja84sd90jmv.cloudfront.net/posts/R6b81t4MtYO_OORfPG2dTg/ms.jpg"], "水邊最高豬肉湯飯 新世界 Centum 店": ["https://d2uja84sd90jmv.cloudfront.net/posts/R6b81t4MtYO_OORfPG2dTg/ms.jpg"], "春夏秋冬 小麥麵 西面本店": ["https://d3faveac4f5evv.cloudfront.net/2-1318406942.jpg"], "螞蟻家辣炒章魚": ["2023/09/gaemi3.jpg", "2023/09/gaemi.jpg"], "螞蟻家（西面店）": ["2019/01/16.jpg", "2019/01/6-1.jpg"], "釜山 X the SKY": ["2022/03/x-sky3.jpg", "2022/03/x-sky4.jpg"], "X the Sky": ["2022/03/x-sky3.jpg"], "海岸列車 青沙浦 → 尾浦": ["2022/03/beach-train11.jpg"]};
 const IGOVR={'SPA LAND Centum City':'스파랜드','HILL SPA Haeundae':'힐스파','35.1776606,129.1972707':'호텔라온','Denbasta Central Hotel Seomyeon Busan':'','BUSAN X the SKY':'엑스더스카이','La Feuille Gwangalli':'라페이유','Liberta Cheongsapo':'리베르타청사포','workingholiday busan':'워킹홀리데이광안리','14wagon Jeonpo':'14wagon','moody bread market Jeonpo':'무디브레드마켓','Your Type Jeonpo':'유어타입전포','Miffy Cafe Busan':'미피카페부산','EL16.52 영도':'el1652','SD MEDIA 서면':'sdmedia','Tuoi Gelato Busan':'tuoigelato','Standard Bread Busan':'스탠다드브레드','DIART Busan':'디아트','P.ARK 영도':'피아크','Thrill on the Mug Busan':'스릴온더머그','김해국제공항 국제선':'김해공항'};
 const LAON={nav:'35.1776606,129.1972707',map:G+'iCcaED4jN4E8wfdz9'};
-const DENBASTA={nav:'Denbasta Central Hotel Seomyeon Busan',link:['Agoda 訂房',AGODA]};
+const DENBASTA={nav:'부산 부산진구 중앙대로691번길 53',link:['Agoda 訂房',AGODA]};
 
 const days=[
 {id:'d1',area:'海雲台・廣安里',date:'2026-10-21',tab:'Day 1',d:'10/21 三',h:'抵達釜山・汗蒸幕放鬆',
@@ -347,7 +350,7 @@ const days=[
     {n:'螞蟻家（西面店）',s:'9:00–00:30',map:G+'J8xjrck9Mxdh691i7',nav:'개미집 서면점'},
     {n:'春夏秋冬 小麥麵 西面本店',s:'10:00–21:30',map:G+'tY3ofkue8e8S5M947',nav:'춘하추동 밀면 서면본점'},
     {n:'松亭三代湯飯',s:'24 小時',map:G+'JNprK7Yt6ngp66HY6',nav:'송정3대국밥'},
-    {n:'密陽加山豬肉湯飯 凡一店',s:'CORTIS 同款｜24 小時',map:G+'TiiuUbRUHiC8vDhM6'}]},
+    {n:'密陽加山豬肉湯飯 凡一店',s:'CORTIS 同款｜24 小時',map:G+'TiiuUbRUHiC8vDhM6',nav:'밀양가산돼지국밥 범일점'}]},
   {t:'14:00',k:'move',title:'回飯店拿行李 → 金海機場',sub:'約 40 分鐘',nav:'김해국제공항 국제선',
    tip:'<b>地鐵</b> 步行 10 分到西面站綠線 → 沙上站 → 轉紫線（輕軌）→ 機場站'},
   {t:'15:00',k:'move',title:'抵達金海機場',sub:'預留退稅、托運、安檢時間，怕退稅人太多'},
@@ -414,8 +417,9 @@ const ic={
 
 /* Korean names for Naver / driver card. Default: the Korean search name already in the data. */
 const KO={
- '35.1776606,129.1972707':'호텔 라온 (Hotel Laon)',
- 'Denbasta Central Hotel Seomyeon Busan':'서면 덴바스타 센트럴 호텔',
+ '35.1776606,129.1972707':'호텔 라온 송정',
+ '부산 부산진구 중앙대로691번길 53':'서면 덴바스타 센트럴 호텔',
+ '83해치':'83해치 서면점',
  'SPA LAND Centum City':'신세계 센텀시티 스파랜드',
  'HILL SPA Haeundae':'해운대 힐스파',
  'BUSAN X the SKY':'부산 엑스더스카이 (엘시티)',
@@ -430,6 +434,37 @@ const KO={
  'SD MEDIA 서면':'SD MEDIA 서면',
  '김해국제공항 국제선':'김해국제공항 국제선 청사',
  'Tuoi Gelato Busan':'Tuoi Gelato','Standard Bread Busan':'스탠다드브레드','DIART Busan':'디아트','P.ARK 영도':'피아크 영도','Thrill on the Mug Busan':'스릴온더머그'
+};
+/* verified Korean addresses for the driver card */
+const ADDR={
+ '35.1776606,129.1972707':'부산 해운대구 송정광어골로 39',
+ '부산 부산진구 중앙대로691번길 53':'부산 부산진구 중앙대로691번길 53',
+ '김해국제공항 국제선':'부산 강서구 공항진입로 108',
+ 'SPA LAND Centum City':'부산 해운대구 센텀남대로 35 신세계 센텀시티',
+ 'HILL SPA Haeundae':'부산 해운대구 달맞이길117번길 11',
+ '광안리해수욕장':'부산 수영구 광안해변로 219',
+ '언양불고기 부산집':'부산 수영구 남천바다로 32',
+ 'workingholiday busan':'부산 수영구 광안해변로 235 3층',
+ 'BUSAN X the SKY':'부산 해운대구 달맞이길 30 엘시티 랜드마크타워',
+ '자연도소금빵 해운대':'부산 해운대구 달맞이길62번길 12-2',
+ '자연도소금빵':'부산 해운대구 달맞이길62번길 12-2',
+ '해운대블루라인파크 미포정거장':'부산 해운대구 달맞이길62번길 13',
+ '청사포정거장':'부산 해운대구 청사포로 116',
+ '수변최고돼지국밥 센텀':'부산 해운대구 센텀3로 26 센텀스퀘어 2층',
+ '83해치':'부산 부산진구 서전로 11-1 신전빌딩 1층',
+ '감천문화마을':'부산 사하구 감내2로 203',
+ '부평깡통시장':'부산 중구 부평1길 48',
+ '자갈치시장':'부산 중구 자갈치해안로 52',
+ '흰여울문화마을':'부산 영도구 영선동4가 (흰여울길)',
+ 'Miffy Cafe Busan':'부산 영도구 와치로51번길 2',
+ '송도해상케이블카':'부산 서구 송도해변로 171 (송도베이스테이션)',
+ 'Your Type Jeonpo':'부산 부산진구 동성로15번길 33 2층',
+ '전포카페거리':'부산 부산진구 전포동 (NC백화점 서면점 근처)',
+ 'moody bread market Jeonpo':'부산 부산진구 전포대로216번길 22',
+ '개미집 서면점':'부산 부산진구 부전동 240-5',
+ '춘하추동 밀면 서면본점':'부산 부산진구 서면문화로 48-1',
+ '송정3대국밥':'부산 부산진구 서면로68번길 33 1층',
+ '밀양가산돼지국밥 범일점':'부산 동구 자성로133번길 45'
 };
 const koOf=q=>KO[q]||q;
 const gNav=q=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(q);
@@ -446,14 +481,14 @@ function acts(p,name){
   return `<div class="acts">
     <a class="act g" href="${gNav(p.nav)}" target="_blank" rel="noopener">${ic.nav}Google</a>
     <a class="act n" href="${nSearch(p.nav)}" target="_blank" rel="noopener">${ic.pin}Naver</a>
-    <button type="button" class="act d drv" data-ko="${esc(koOf(p.nav))}" data-zh="${esc(name)}" data-q="${esc(p.nav)}">${ic.taxi}給司機看</button>
+    <button type="button" class="act d drv" data-ko="${esc(koOf(p.nav))}" data-zh="${esc(name)}" data-q="${esc(p.nav)}" data-addr="${esc(ADDR[p.nav]||'')}">${ic.taxi}給司機看</button>
   </div>`+linksHtml(p);
 }
 function linksHtml(p){
   const L=[];
   const m=p.map||(p.nav?gSearch(p.nav):null);
   if(m) L.push(`<a href="${m}" target="_blank" rel="noopener">${ic.pin}Google 照片・評論</a>`);
-  const tg=igTag(p); if(tg) L.push(`<a href="https://www.instagram.com/explore/tags/${encodeURIComponent(tg)}/" target="_blank" rel="noopener">${ic.ig}IG 照片</a>`);
+  const tg=igTag(p); if(tg) L.push(`<a href="instagram://tag?name=${encodeURIComponent(tg)}">${ic.ig}IG 照片（開 App）</a>`);
   if(p.link) L.push(`<a href="${p.link[1]}" target="_blank" rel="noopener">${ic.ext}${esc(p.link[0])}</a>`);
   return L.length?`<div class="links">${L.join('')}</div>`:'';
 }
@@ -554,8 +589,8 @@ function sosHtml(){
   ${SOS.map(([n,l,s])=>`<a class="call" href="tel:${n.replace(/-/g,'')}"><span>${l}${s?`<small>${s}</small>`:''}</span><b>${n}</b></a>`).join('')}
   <div class="sub" style="margin:8px 0 10px">釜山辦事處：부산광역시 중구 중앙대로 70 동원산업빌딩 9층</div>
   <div class="acts" style="grid-template-columns:1fr 1fr">
-    <button type="button" class="act d drv" data-ko="${esc(koOf(LAON.nav))}" data-zh="拉昂酒店（10/21–23）" data-q="${LAON.nav}">${ic.taxi}拉昂酒店</button>
-    <button type="button" class="act d drv" data-ko="${esc(koOf(DENBASTA.nav))}" data-zh="西面登巴斯塔中央酒店（10/23–25）" data-q="${DENBASTA.nav}">${ic.taxi}登巴斯塔</button>
+    <button type="button" class="act d drv" data-ko="${esc(koOf(LAON.nav))}" data-zh="拉昂酒店（10/21–23）" data-q="${LAON.nav}" data-addr="${ADDR[LAON.nav]}">${ic.taxi}拉昂酒店</button>
+    <button type="button" class="act d drv" data-ko="${esc(koOf(DENBASTA.nav))}" data-zh="西面登巴斯塔中央酒店（10/23–25）" data-q="${DENBASTA.nav}" data-addr="${ADDR[DENBASTA.nav]}">${ic.taxi}登巴斯塔</button>
   </div>
   <div class="sub" style="margin-top:6px">上面兩顆可以直接把飯店名稱給司機看</div>`;
 }
@@ -654,7 +689,7 @@ document.addEventListener('click',e=>{
   const exp=e.target.closest('.exp');
   if(exp){exp.closest('section').querySelectorAll('details.sd').forEach(d=>d.open=exp.dataset.open==='1');return}
   const drv=e.target.closest('.drv');
-  if(drv){$('#dr-ko').textContent=drv.dataset.ko;$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=nSearch(drv.dataset.q);closeSheets();openSheet('sh-driver');return}
+  if(drv){$('#dr-ko').textContent=drv.dataset.ko;const ad=drv.dataset.addr;$('#dr-addr').textContent=ad||'地址請以 Naver 地圖為準';$('#dr-addr').classList.toggle('none',!ad);$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=nSearch(drv.dataset.q);closeSheets();openSheet('sh-driver');return}
   if(e.target.closest('[data-close]')||e.target.classList.contains('sheet')){closeSheets();return}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
