@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="釜山之旅">
 <title>釜山之旅 5天4夜</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
@@ -44,6 +47,7 @@ header.hero{background:#1f5f8b;color:#fff;padding-block:16px 14px}
 .hero p{margin:2px 0 0;opacity:.85;font-size:.82rem}
 .hbtn{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:.68rem;font-weight:700;cursor:pointer;line-height:1.1;gap:2px}
 .hbtn b{font-size:1.15rem}
+.hero h1{white-space:nowrap}
 .hbtn.sos{background:#c0392b}
 .next .acts .act.g{background:var(--b-sea)}
 
@@ -202,6 +206,21 @@ body.no-maps .mapimg{display:none}
 .sos a.call span small{display:block;color:var(--muted);font-size:.78rem}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.85rem;z-index:30}
 
+
+.wx{display:inline-flex;flex-wrap:wrap;gap:2px 10px;margin-left:10px;font-size:.8rem;color:var(--muted)}
+.hrs{display:inline-block;font-size:.66rem;font-weight:700;border-radius:4px;padding:0 6px;margin-left:4px;vertical-align:2px}
+.hrs.on{background:var(--ok-soft);color:var(--ok)}
+.hrs.soon{background:var(--move-soft);color:var(--move)}
+.hrs.off{background:var(--line);color:var(--muted)}
+.hnote{font-size:.74rem;color:var(--muted);margin-top:6px}
+.srch input{width:100%;font:inherit;font-size:1.05rem;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+.srch ul{list-style:none;margin:10px 0 0;padding:0;min-height:40vh}
+.srch li button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:10px 4px;cursor:pointer}
+.srch li button small{display:block;color:var(--muted);font-size:.8rem}
+.srch li.hint{color:var(--muted);font-size:.88rem;padding:10px 4px}
+.flash{animation:flash 1.4s var(--ease)}
+@keyframes flash{0%,40%{background:var(--pink-soft)}100%{background:transparent}}
+.hbtn{width:48px;height:48px}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -240,9 +259,10 @@ main section.in-l{animation:inL .32s var(--ease)}
 <header class="hero">
   <div class="wrap">
     <div class="ttl">
-      <h1>釜山之旅 5天4夜</h1>
-      <p>10/21（三）～ 10/25（日）・韋茜／侑潔／亞婕</p>
+      <h1>釜山之旅</h1>
+      <p>5天4夜・10/21–10/25</p>
     </div>
+    <button type="button" class="hbtn" id="open-search" aria-label="搜尋"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>搜尋</button>
     <button type="button" class="hbtn" id="open-cv" aria-label="韓圜換算"><b>₩</b>換算</button>
     <button type="button" class="hbtn sos" id="open-sos" aria-label="緊急聯絡"><b>SOS</b>緊急</button>
   </div>
@@ -272,6 +292,14 @@ main section.in-l{animation:inL .32s var(--ease)}
   </div>
 </div>
 
+<div class="sheet" id="sh-search" hidden role="dialog" aria-modal="true" aria-label="搜尋">
+  <div class="pane srch">
+    <h4>搜尋行程與收藏<button type="button" class="x" data-close aria-label="關閉">✕</button></h4>
+    <input id="q" type="search" placeholder="店名、地點，例如 炸雞、螞蟻家" autocomplete="off">
+    <ul id="q-res"></ul>
+  </div>
+</div>
+
 <div class="sheet" id="sh-sos" hidden role="dialog" aria-modal="true" aria-label="緊急聯絡">
   <div class="pane sos" id="sos-body"></div>
 </div>
@@ -298,7 +326,7 @@ const days=[
    alts:[{n:'Hill Spa 汗蒸幕',s:'備選｜海景、24 小時行李寄放、館內 7-11 可煮泡麵、露天泡腳池。Klook 折扣碼 MEOWMEOW',nav:'HILL SPA Haeundae',map:G+'HohNAFgBkHkLPgEU6'}],
    tip:'<b>SPA LAND → 飯店｜叫計程車</b>（約 40 分）。只有公車可到，但不能帶大件行李。'},
   {t:'15:00',k:'stay',title:'入住 拉昂酒店',sub:'4 人房 2 晚',...LAON},
-  {t:'傍晚',k:'sight',title:'廣安里海灘・夕陽與廣安大橋夜景',sub:'坐計程車去',nav:'광안리해수욕장',map:G+'nTMg8L8LVRdHjjWBA'},
+  {t:'傍晚',k:'sight',title:'廣安里海灘・夕陽與廣安大橋夜景',sub:'坐計程車去',nav:'광안리해수욕장',map:G+'nTMg8L8LVRdHjjWBA',tip:'<b>回飯店</b> 拉昂酒店在松亭（不在廣安里），從廣安里搭計程車約 20–30 分鐘。'},
   {t:'晚餐',k:'food',title:'廣安里附近晚餐',sub:'原本想吃：烤肉的男子 廣安里店／豚笑 廣安里店／彥陽烤牛肉 釜山家',
    alts:[
     {n:'彥陽烤牛肉 釜山家',s:'原本想吃的燒肉',nav:'언양불고기 부산집',ig:'언양불고기부산집'},
@@ -543,12 +571,30 @@ const DUE={ /* times you must not miss */
  d5:[['11:00','飯店退房'],['15:00','抵達金海機場'],['18:55','飛機起飛']]
 };
 const pad=n=>String(n).padStart(2,'0');
-const now=()=>new Date();
-const todayStr=()=>{const d=now();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+const kst=()=>new Date(Date.now()+9*3600e3); /* Korea time, whatever the phone's zone */
+const todayStr=()=>{const d=kst();return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`};
 const minsOf=t=>{const m=/^(\d{1,2}):(\d{2})$/.exec(t);return m?+m[1]*60+ +m[2]:null};
-const nowMins=()=>{const d=now();return d.getHours()*60+d.getMinutes()};
+const nowMins=()=>{const d=kst();return d.getUTCHours()*60+d.getUTCMinutes()};
 const fmtLeft=m=>m>=60?`${Math.floor(m/60)} 小時 ${m%60} 分`:`${m} 分`;
 
+
+/* opening-hours badge (Korea time). Hours come from the trip notes; Naver has the live hours. */
+function hoursOf(t){if(!t||/最適合|首班|末班|QR/.test(t))return null;if(/24\s*小時/.test(t))return {all:1};const m=/(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})/.exec(t);return m?{o:+m[1]*60+ +m[2],c:+m[3]*60+ +m[4]}:null}
+const hhmm=m=>`${pad(Math.floor(m/60)%24)}:${pad(m%60)}`;
+function hrsSpan(t){const h=hoursOf(t);return h?`<span class="hrs" data-h="${h.all?'all':h.o+','+h.c}"></span>`:''}
+function paintHours(){
+  const n=nowMins(),today=todayStr();
+  document.querySelectorAll('.hrs').forEach(el=>{
+    const sec=el.closest('section');const d=days.find(x=>'sec-'+x.id===sec.id);
+    if(!d||d.date!==today){el.hidden=true;return}
+    el.hidden=false;
+    if(el.dataset.h==='all'){el.className='hrs on';el.textContent='24h 營業';return}
+    let [o,c]=el.dataset.h.split(',').map(Number);if(c<=o)c+=1440;
+    let x=n;if(x<o&&x+1440<c)x+=1440;
+    if(x>=o&&x<c){const left=c-x;el.className='hrs '+(left<=60?'soon':'on');el.textContent=left<=60?`${left} 分後打烊`:'營業中'}
+    else{el.className='hrs off';el.textContent=`已打烊・${hhmm(o)} 開`}
+  });
+}
 /* ================= day view ================= */
 const kindLabel={move:'交通',food:'吃',sight:'景點',stay:'住宿',note:'提醒'};
 const doneKey=(d,i)=>`done-${d}-${i}`;
@@ -562,11 +608,12 @@ function stopHtml(d,s,i){
   c+=photoHtml(s.title);
   if(s.nav) c+=mapHtml(s.nav);
   c+=acts(s,s.title);
-  if(s.alts){c+='<div class="alts">'+s.alts.map(a=>`<div class="alt"><div class="an">${esc(a.n)}${a.s?`<small>${esc(a.s)}</small>`:''}</div>${photoHtml(a.n)}${mapHtml(a.nav)}${acts(a,a.n)}</div>`).join('')+'</div>'}
+  if(s.alts){c+='<div class="alts">'+s.alts.map(a=>`<div class="alt"><div class="an">${esc(a.n)} ${hrsSpan(a.s)}${a.s?`<small>${esc(a.s)}</small>`:''}</div>${photoHtml(a.n)}${mapHtml(a.nav)}${acts(a,a.n)}</div>`).join('')+'</div>'}
   if(s.tip) c+=`<div class="tip">${s.tip}</div>`;
   if(s.warn) c+=`<div class="warn">⚠️ ${esc(s.warn)}</div>`;
+  if(hoursOf(s.sub)||(s.alts||[]).some(a=>hoursOf(a.s))) c+=`<div class="hnote">營業時間來自筆記，實際以 Naver 地圖為準</div>`;
   const badges=(s.alts?`<span class="badge">${s.alts.length} 選 1</span>`:'')+(s.warn||isDue?`<span class="badge warn">${isDue?'⏰ 準時':'⚠️ 注意'}</span>`:'');
-  const head=`<span class="kind">${kindLabel[s.k]}</span>${badges}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}`;
+  const head=`<span class="kind">${kindLabel[s.k]}</span>${badges}${s.k==='move'?'':hrsSpan(s.sub)}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}`;
   const q=s.nav?`<a class="qnav" href="${gNav(s.nav)}" target="_blank" rel="noopener" aria-label="導航到 ${esc(s.title)}">${ic.nav}導航</a>`:'';
   return `<li class="stop ${k}${s.nav?'':' no-q'}${isDue?' due':''}${isDone(d.id,i)?' is-done':''}" data-d="${d.id}" data-i="${i}">
     <div class="time">${esc(s.t)}</div>
@@ -580,7 +627,7 @@ function renderDay(d){
   const stayBtn=d.stay[1].nav?`<a class="qnav" href="${gNav(d.stay[1].nav)}" target="_blank" rel="noopener" style="width:auto;height:40px;flex-direction:row;padding:0 12px;gap:4px">${ic.nav}回飯店</a>`:'';
   return `<div class="eyebrow">${esc(d.area)}</div>
   <h2>${esc(d.tab)}｜${esc(d.h)}</h2>
-  <p class="date">${esc(d.d)}</p>
+  <p class="date">${esc(d.d)}<span class="wx" data-date="${d.date}"></span></p>
   <div class="next-slot"></div>
   <div class="stay"><span>🛏 ${esc(d.stay[0])}</span>${stayBtn}</div>
   <div class="flow">${esc(d.flow)}</div>
@@ -591,6 +638,7 @@ function renderDay(d){
 
 /* 下一站 card: only on today's tab */
 function updateNext(){
+  paintHours();
   document.querySelectorAll('.stop.is-next').forEach(e=>e.classList.remove('is-next'));
   for(const d of days){
     const slot=document.querySelector(`#sec-${d.id} .next-slot`);
@@ -612,6 +660,41 @@ function updateNext(){
   }
 }
 
+
+/* weather + sunset for Busan (Open-Meteo, no key). Cached so it shows offline. */
+const WXC=c=>c===0?['☀️','晴']:c<=2?['🌤','晴時多雲']:c===3?['☁️','陰']:c<=48?['🌫','霧']:c<=57?['🌦','毛毛雨']:c<=67?['🌧','雨']:c<=77?['❄️','雪']:c<=82?['🌦','陣雨']:['⛈','雷雨'];
+function paintWx(w){if(!w||!w.daily)return;const D=w.daily;
+  document.querySelectorAll('.wx').forEach(el=>{const i=D.time.indexOf(el.dataset.date);if(i<0){el.textContent='';return}
+    const [e,t]=WXC(D.weather_code[i]);const ss=(D.sunset[i]||'').slice(11,16);
+    el.innerHTML=`<span>${e} ${t} ${Math.round(D.temperature_2m_max[i])}°/${Math.round(D.temperature_2m_min[i])}°</span><span>☔ ${D.precipitation_probability_max[i]??'-'}%</span><span>🌇 日落 ${ss}</span>`})}
+function loadWx(){
+  try{paintWx(JSON.parse(store.get('wx','null')))}catch(e){}
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=35.16&longitude=129.10&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunset&timezone=Asia%2FSeoul&start_date=2026-10-21&end_date=2026-10-25')
+   .then(r=>r.ok?r.json():null).then(w=>{if(w&&w.daily){store.set('wx',JSON.stringify(w));paintWx(w)}}).catch(()=>{});
+}
+
+/* search across days + collection */
+let PI=0;
+function buildIndex(){
+  const ix=[];
+  days.forEach(d=>d.stops.forEach((s,i)=>{
+    ix.push({t:s.title,sub:`${d.tab}・${s.t}`,go:()=>goStop(d.id,i),k:[s.title,s.sub,s.nav].join(' ')});
+    (s.alts||[]).forEach(a=>ix.push({t:a.n,sub:`${d.tab}・${s.t}・${s.title}`,go:()=>goStop(d.id,i),k:[a.n,a.s,a.nav].join(' ')}));
+  }));
+  document.querySelectorAll('#sec-info .place').forEach(p=>{const t=p.querySelector('.title').textContent;const g=p.closest('details.grp');ix.push({t,sub:'收藏・'+g.querySelector('summary').textContent.replace(/^\S+\s*/,''),go:()=>goPlace(p),k:t+' '+(p.querySelector('.meta')?.textContent||'')})});
+  return ix;
+}
+let IX=null;
+function goStop(id,i){closeSheets();show(id,false);const li=document.querySelector(`.stop[data-d="${id}"][data-i="${i}"]`);const d=li.querySelector('details.sd');if(d&&!d.open)animateDetails(d,true);setTimeout(()=>{li.scrollIntoView({block:'center',behavior:'smooth'});li.classList.add('flash');setTimeout(()=>li.classList.remove('flash'),1400)},120)}
+function goPlace(p){closeSheets();show('info',false);const g=p.closest('details.grp');if(!g.open)animateDetails(g,true);setTimeout(()=>{p.scrollIntoView({block:'center',behavior:'smooth'});p.classList.add('flash');setTimeout(()=>p.classList.remove('flash'),1400)},150)}
+function runSearch(){
+  const q=$('#q').value.trim().toLowerCase();const ul=$('#q-res');
+  if(!q){ul.innerHTML='<li class="hint">輸入關鍵字就會出現結果</li>';return}
+  IX=IX||buildIndex();
+  const r=IX.filter(x=>x.k.toLowerCase().includes(q)).slice(0,30);
+  ul.innerHTML=r.length?r.map((x,i)=>`<li><button type="button" data-r="${i}"><b>${esc(x.t)}</b><small>${esc(x.sub)}</small></button></li>`).join(''):'<li class="hint">找不到，換個關鍵字試試</li>';
+  ul.onclick=e=>{const b=e.target.closest('button');if(b)r[+b.dataset.r].go()};
+}
 /* ================= info tab ================= */
 function placeList(arr){
   return arr.map(([n,m,q,map])=>`<div class="place"><div class="title">${esc(n)}</div>${m?`<div class="meta">${esc(m)}</div>`:''}${photoHtml(n)}${q?acts({nav:q,map},n):linksHtml({map})}</div>`).join('');
@@ -780,6 +863,8 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
 $('#open-sos').addEventListener('click',()=>{$('#sos-body').innerHTML=sosHtml();openSheet('sh-sos')});
+$('#open-search').addEventListener('click',()=>{openSheet('sh-search');runSearch();setTimeout(()=>$('#q').focus(),60)});
+$('#q').addEventListener('input',runSearch);
 $('#open-cv').addEventListener('click',()=>{openSheet('sh-cv');setTimeout(()=>$('#cv-krw').focus(),50)});
 
 /* converter */
@@ -804,6 +889,7 @@ document.querySelectorAll('.check input').forEach(cb=>{cb.checked=store.get('ck-
 $('#reset-done').addEventListener('click',()=>{days.forEach(d=>d.stops.forEach((s,i)=>store.set(doneKey(d.id,i),'0')));document.querySelectorAll('.stop.is-done').forEach(li=>{li.classList.remove('is-done');li.querySelector('.chk').setAttribute('aria-pressed','false')});updateNext();toast('已清除')});
 
 /* start */
+loadWx();
 updateNext();
 const today=days.find(d=>d.date===todayStr());
 let start='info';const hash=location.hash.slice(1);
