@@ -201,7 +201,39 @@ body.no-maps .mapimg{display:none}
 .sos a.call b{font-family:var(--f-mono);font-size:1.05rem;color:var(--due);white-space:nowrap}
 .sos a.call span small{display:block;color:var(--muted);font-size:.78rem}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.85rem;z-index:30}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== motion ===== */
+*{-webkit-tap-highlight-color:transparent}
+:root{--ease:cubic-bezier(.2,.8,.2,1)}
+nav.tabs .wrap{position:relative}
+nav.tabs button{z-index:1;transition:color .25s var(--ease)}
+nav.tabs button[aria-selected="true"]{background:transparent}
+.pill{position:absolute;top:6px;left:0;height:calc(100% - 12px);border-radius:12px;background:var(--b-sea);transition:transform .35s var(--ease),width .35s var(--ease);will-change:transform;z-index:0}
+main section{animation:none}
+main section.in-r{animation:inR .32s var(--ease)}
+main section.in-l{animation:inL .32s var(--ease)}
+@keyframes inR{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+.qnav,.act,.hbtn,.chk,.tools button,.lk,.cv .chips button,.sos a.call,.x{transition:transform .14s var(--ease),filter .14s}
+.qnav:active,.act:active,.hbtn:active,.tools button:active,.lk:active,.cv .chips button:active,.sos a.call:active,.x:active{transform:scale(.95);filter:brightness(.92)}
+.sd>summary{transition:background .2s}
+.sd>summary:active{background:var(--sea-soft)}
+.sd>summary::after{transition:transform .3s var(--ease),top .3s var(--ease)}
+.sdc,details.grp .inner{overflow:hidden}
+.stop .title,.stop .sd>summary,.stop .plain{transition:opacity .3s,color .3s}
+.chk.pop i{animation:pop .38s var(--ease)}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.45)}100%{transform:scale(1)}}
+.next{animation:fadeUp .35s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.sheet{opacity:0;transition:opacity .25s var(--ease)}
+.sheet .pane{transform:translateY(100%);transition:transform .32s var(--ease)}
+.sheet.driver .pane{transform:scale(.96)}
+.sheet.show{opacity:1}
+.sheet.show .pane{transform:none}
+.toast{animation:toastIn .25s var(--ease)}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -669,36 +701,81 @@ const tabsEl=$('#tabs'), mainEl=$('#main');
 const all=[{id:'info',area:'出發前',tab:'行前',d:'資訊'},...days.map(d=>({id:d.id,area:d.area,tab:d.tab,d:d.d.split(' ')[0],date:d.date}))];
 mainEl.innerHTML=`<section id="sec-info">${renderInfo()}</section>`+days.map(d=>`<section id="sec-${d.id}" hidden>${renderDay(d)}</section>`).join('');
 function renderTabs(){
+  requestAnimationFrame(movePill);
   tabsEl.innerHTML=all.map(t=>`<button role="tab" id="tab-${t.id}" data-id="${t.id}" aria-selected="false">${t.date===todayStr()?'<span class="dot" aria-label="今天"></span>':''}<em>${esc(t.area)}</em><strong>${esc(t.tab)}</strong><small>${esc(t.d)}</small></button>`).join('');
 }
 renderTabs();
 let current='info';
 function show(id,scroll){
+  const from=all.findIndex(a=>a.id===current),to=all.findIndex(a=>a.id===id);
+  const changed=id!==current;
   current=id;
   for(const t of all){$('#sec-'+t.id).hidden=t.id!==id;$('#tab-'+t.id).setAttribute('aria-selected',t.id===id)}
   store.set('tab',id);
-  if(scroll) window.scrollTo({top:$('header.hero').offsetHeight});
-  $('#tab-'+id).scrollIntoView({block:'nearest',inline:'center'});
+  const sec=$('#sec-'+id);sec.classList.remove('in-l','in-r');if(changed&&!REDUCE){void sec.offsetWidth;sec.classList.add(to>from?'in-r':'in-l')}
+  movePill();
+  if(scroll&&window.scrollY>$('header.hero').offsetHeight) window.scrollTo({top:$('header.hero').offsetHeight});
+  const tb=$('#tab-'+id);tabsEl.scrollTo({left:tb.offsetLeft-(tabsEl.clientWidth-tb.offsetWidth)/2,behavior:REDUCE?'auto':'smooth'});
   if(id!=='info') jumpToNext(id);
 }
 function jumpToNext(id){
   const d=days.find(x=>x.id===id); if(!d||d.date!==todayStr()) return;
   const el=document.querySelector(`#sec-${id} .stop.is-next`);
-  if(el && el.getBoundingClientRect().top>window.innerHeight) el.scrollIntoView({block:'center'});
+  if(el && el.getBoundingClientRect().top>window.innerHeight) el.scrollIntoView({block:'center',behavior:'smooth'});
 }
 tabsEl.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;show(b.dataset.id,true);try{history.replaceState(null,'','#'+b.dataset.id)}catch(err){}});
 
+
+/* ===== motion helpers ===== */
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateDetails(d,open){
+  const c=d.querySelector(':scope>.sdc, :scope>.inner');
+  d._target=open;
+  if(REDUCE||!c){d.open=open;return}
+  if(d._anim) d._anim.cancel();
+  if(open){
+    d.open=true;
+    const h=c.scrollHeight;
+    d._anim=c.animate([{height:'0px',opacity:0},{height:h+'px',opacity:1}],{duration:Math.min(420,180+h*.25),easing:'cubic-bezier(.2,.8,.2,1)'});
+  }else{
+    const h=c.scrollHeight;
+    d._anim=c.animate([{height:h+'px',opacity:1},{height:'0px',opacity:0}],{duration:Math.min(320,140+h*.18),easing:'cubic-bezier(.4,0,.2,1)'});
+    d._anim.onfinish=()=>{d.open=false};
+  }
+  const a=d._anim; a.addEventListener('finish',()=>{if(d._anim===a)d._anim=null});
+}
+document.addEventListener('click',e=>{
+  const sm=e.target.closest('details.sd>summary, details.grp>summary');
+  if(!sm) return;
+  e.preventDefault();
+  const d=sm.parentElement;
+  animateDetails(d,!(d._target??d.open));
+},true);
+function movePill(){
+  const sel=tabsEl.querySelector('[aria-selected="true"]');let p=tabsEl.querySelector('.pill');
+  if(!p){p=document.createElement('span');p.className='pill';tabsEl.prepend(p)}
+  if(!sel) return;
+  p.style.width=sel.offsetWidth+'px';p.style.transform=`translateX(${sel.offsetLeft}px)`;
+}
+window.addEventListener('resize',movePill);
+/* swipe left/right to change day */
+(()=>{let x0=null,y0=0,t0=0;
+  mainEl.addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('input,iframe,.tbl')){x0=null;return}x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now()},{passive:true});
+  mainEl.addEventListener('touchend',e=>{if(x0===null)return;const t=e.changedTouches[0];const dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
+    if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8&&Date.now()-t0<600){const i=all.findIndex(a=>a.id===current);const j=i+(dx<0?1:-1);if(j>=0&&j<all.length){show(all[j].id,true);try{history.replaceState(null,'','#'+all[j].id)}catch(err){}}}
+  },{passive:true});
+})();
 /* ================= interactions ================= */
 function toast(t){const el=document.createElement('div');el.className='toast';el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),1600)}
-function openSheet(id){const s=$('#'+id);s.hidden=false;document.body.style.overflow='hidden'}
-function closeSheets(){document.querySelectorAll('.sheet').forEach(s=>s.hidden=true);document.body.style.overflow=''}
+function openSheet(id){const s=$('#'+id);s.hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add('show')))}
+function closeSheets(){document.querySelectorAll('.sheet:not([hidden])').forEach(s=>{s.classList.remove('show');setTimeout(()=>{if(!s.classList.contains('show'))s.hidden=true},REDUCE?0:300)});document.body.style.overflow=''}
 document.addEventListener('click',e=>{
   const chk=e.target.closest('.chk');
-  if(chk){const li=chk.closest('.stop');const k=doneKey(li.dataset.d,li.dataset.i);const v=!li.classList.contains('is-done');store.set(k,v?'1':'0');li.classList.toggle('is-done',v);chk.setAttribute('aria-pressed',v);updateNext();if(v)toast('已完成 ✓');return}
+  if(chk){const li=chk.closest('.stop');const k=doneKey(li.dataset.d,li.dataset.i);const v=!li.classList.contains('is-done');store.set(k,v?'1':'0');li.classList.toggle('is-done',v);chk.setAttribute('aria-pressed',v);chk.classList.remove('pop');if(v){void chk.offsetWidth;chk.classList.add('pop')}if(navigator.vibrate&&v)navigator.vibrate(12);updateNext();if(v)toast('已完成 ✓');return}
   const exp=e.target.closest('.exp');
-  if(exp){exp.closest('section').querySelectorAll('details.sd').forEach(d=>d.open=exp.dataset.open==='1');return}
+  if(exp){const o=exp.dataset.open==='1';exp.closest('section').querySelectorAll('details.sd').forEach(d=>{if(d.open!==o)animateDetails(d,o)});return}
   const drv=e.target.closest('.drv');
-  if(drv){$('#dr-ko').textContent=drv.dataset.ko;const ad=drv.dataset.addr;$('#dr-addr').textContent=ad||'地址請以 Naver 地圖為準';$('#dr-addr').classList.toggle('none',!ad);$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=nSearch(drv.dataset.q);closeSheets();openSheet('sh-driver');return}
+  if(drv){$('#dr-ko').textContent=drv.dataset.ko;const ad=drv.dataset.addr;$('#dr-addr').textContent=ad||'地址請以 Naver 地圖為準';$('#dr-addr').classList.toggle('none',!ad);$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=nSearch(drv.dataset.q);document.querySelectorAll('.sheet:not(#sh-driver)').forEach(x=>{x.classList.remove('show');x.hidden=true});openSheet('sh-driver');return}
   if(e.target.closest('[data-close]')||e.target.classList.contains('sheet')){closeSheets();return}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
