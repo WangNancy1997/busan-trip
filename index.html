@@ -258,6 +258,13 @@ body.no-maps .mapimg{display:none}
 .runl{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
 .runl a{font-size:.8rem;font-weight:700;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 11px}
 .stop.run .tip{background:var(--sea-soft)}
+
+.memo{margin-top:10px;position:relative}
+.memo label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:4px}
+.memo-in{display:block;width:100%;font:inherit;font-size:.92rem;line-height:1.5;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:none;min-height:44px}
+.memo-in:focus{outline:2px solid var(--sea);outline-offset:0;border-color:transparent}
+.memo-st{position:absolute;right:4px;top:0;font-size:.72rem;color:var(--ok)}
+.memo-prev{font-size:.8rem;color:var(--pink);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -290,6 +297,7 @@ main section.in-l{animation:inL .32s var(--ease)}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 @media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
 
+.hero p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ver{opacity:.7;font-size:.7rem;font-family:var(--f-mono);margin-left:4px}
 </style>
 </head>
@@ -298,7 +306,7 @@ main section.in-l{animation:inL .32s var(--ease)}
   <div class="wrap">
     <div class="ttl">
       <h1>釜山之旅</h1>
-      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 17:58</span></p>
+      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 22:20</span></p>
     </div>
     <button type="button" class="hbtn" id="open-search" aria-label="搜尋"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>搜尋</button>
     <button type="button" class="hbtn" id="open-cv" aria-label="韓圜換算"><b>₩</b>換算</button>
@@ -675,6 +683,11 @@ function paintHours(){
     else{el.className='hrs off';el.textContent=`已打烊・${hhmm(o)} 開`}
   });
 }
+/* notes per stop, saved on this phone (keyed by day + title so reordering keeps them) */
+const memoKey=(d,s)=>`memo-${d}-${s.title}`;
+const memoOf=(d,s)=>store.get(memoKey(d,s),'');
+const memoPrev=t=>t?`<div class="memo-prev">📝 ${esc(t.split('\n')[0].slice(0,40))}${t.length>40||t.includes('\n')?'…':''}</div>`:'';
+function memoBox(d,s){const v=memoOf(d,s);return `<div class="memo"><label>📝 備註</label><textarea class="memo-in" data-k="${esc(memoKey(d,s))}" rows="2" placeholder="例如：要點什麼、集合地點、提醒誰…">${esc(v)}</textarea><span class="memo-st"></span></div>`}
 /* ================= day view ================= */
 const kindLabel={move:'交通',food:'吃',sight:'景點',stay:'住宿',note:'提醒'};
 const doneKey=(d,i)=>`done-${d}-${i}`;
@@ -695,8 +708,9 @@ function stopHtml(d,s,i){
   if(s.warn) c+=`<div class="warn">⚠️ ${esc(s.warn)}</div>`;
   if(hoursOf(s.sub)||(s.alts||[]).some(a=>hoursOf(a.s))) c+=`<div class="hnote">營業時間來自筆記，實際以 Naver 地圖為準</div>`;
   }
+  c+=memoBox(d.id,s);
   const badges=(s.alts?`<span class="badge">${s.alts.length} 選 1</span>`:'')+(s.warn||isDue?`<span class="badge warn">${isDue?'⏰ 準時':'⚠️ 注意'}</span>`:'');
-  const head=`<span class="kind">${kindLabel[s.k]}</span>${badges}${s.k==='move'?'':hrsSpan(s.sub)}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}`;
+  const head=`<span class="kind">${kindLabel[s.k]}</span>${badges}${s.k==='move'?'':hrsSpan(s.sub)}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}<span class="memo-slot">${memoPrev(memoOf(d.id,s))}</span>`;
   const q=s.nav?`<a class="qnav" href="${gNav(s.nav)}" target="_blank" rel="noopener" aria-label="導航到 ${esc(s.title)}">${ic.nav}導航</a>`:'';
   return `<li class="stop ${k}${s.run?' run':''}${s.nav?'':' no-q'}${isDue?' due':''}${isDone(d.id,i)?' is-done':''}" data-d="${d.id}" data-i="${i}">
     <div class="time">${esc(s.t)}</div>
@@ -761,7 +775,7 @@ let PI=0;
 function buildIndex(){
   const ix=[];
   days.forEach(d=>d.stops.forEach((s,i)=>{
-    ix.push({t:s.title,sub:`${d.tab}・${s.t}`,go:()=>goStop(d.id,i),k:[s.title,s.sub,s.nav].join(' ')});
+    ix.push({t:s.title,sub:`${d.tab}・${s.t}`,go:()=>goStop(d.id,i),k:[s.title,s.sub,s.nav,memoOf(d.id,s)].join(' ')});
     (s.alts||[]).forEach(a=>ix.push({t:a.n,sub:`${d.tab}・${s.t}・${s.title}`,go:()=>goStop(d.id,i),k:[a.n,a.s,a.nav].join(' ')}));
   }));
   document.querySelectorAll('#sec-info .place').forEach(p=>{const t=p.querySelector('.title').textContent;const g=p.closest('details.grp');ix.push({t,sub:'收藏・'+g.querySelector('summary').textContent.replace(/^\S+\s*/,''),go:()=>goPlace(p),k:t+' '+(p.querySelector('.meta')?.textContent||'')})});
@@ -1017,6 +1031,15 @@ $('#cv-chips').addEventListener('click',e=>{const b=e.target.closest('button');i
 
 /* naver checklist */
 document.querySelectorAll('.nvck').forEach(cb=>{cb.checked=store.get(cb.dataset.k,'0')==='1';cb.addEventListener('change',()=>{store.set(cb.dataset.k,cb.checked?'1':'0');paintNvCount()})});paintNvCount();
+/* memo autosave */
+document.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('memo-in'))return;
+  t.style.height='auto';t.style.height=Math.min(t.scrollHeight,260)+'px';
+  clearTimeout(t._t);const st=t.parentElement.querySelector('.memo-st');st.textContent='';
+  t._t=setTimeout(()=>{store.set(t.dataset.k.replace(/^memo-/,'memo-'),t.value);
+    // store.set adds the busan- prefix; key already starts with memo-
+    const li=t.closest('.stop');const slot=li&&li.querySelector('.memo-slot');if(slot)slot.innerHTML=memoPrev(t.value);
+    st.textContent='已儲存';IX=null;},400);
+});
 /* checklists + display switches */
 document.querySelectorAll('.check input').forEach(cb=>{cb.checked=store.get('ck-'+cb.dataset.k,'0')==='1';cb.addEventListener('change',()=>store.set('ck-'+cb.dataset.k,cb.checked?'1':'0'))});
 [['photos','sw-photos'],['maps','sw-maps']].forEach(([k,id])=>{
