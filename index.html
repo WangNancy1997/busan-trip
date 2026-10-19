@@ -307,7 +307,7 @@ main section.in-l{animation:inL .32s var(--ease)}
   <div class="wrap">
     <div class="ttl">
       <h1>釜山之旅</h1>
-      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 23:45</span></p>
+      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 23:50</span></p>
     </div>
     <button type="button" class="hbtn" id="open-search" aria-label="搜尋"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>搜尋</button>
     <button type="button" class="hbtn" id="open-cv" aria-label="韓圜換算"><b>₩</b>換算</button>
@@ -415,7 +415,7 @@ const days=[
     {n:'嚴湧帛豬肉湯飯',s:'很多人推',map:G+'PhBVT9U1iWyMXbc88',nav:'엄용백돼지국밥 해운대'}]},
   {t:'16:30',k:'move',tix:'膠囊列車',title:'天空膠囊列車 尾浦 → 青沙浦',sub:'16:30–17:00。用 QR Code 換票，YJ 已先購票。',nav:'해운대블루라인파크 미포정거장'},
   {t:'青沙浦',k:'sight',title:'青沙浦拍照・韓版灌籃高手平交道',nav:'청사포정거장',
-   alts:[{n:'Liberta',s:'青沙浦站附近咖啡廳｜9:00–19:30',map:G+'Dnv5kHScApFkVtz96',nav:'Liberta Cheongsapo'},{n:'京信棉被',s:'買棉被',map:'https://share.google/eZs3MNJRxReQpCrUr'}]},
+   alts:[{n:'Liberta',s:'青沙浦站附近咖啡廳｜9:00–19:30',map:G+'Dnv5kHScApFkVtz96',nav:'Liberta Cheongsapo'},{n:'京信棉被',s:'買棉被（Day 3 南浦洞也會去）',map:'https://share.google/eZs3MNJRxReQpCrUr'}]},
   {t:'18:30',k:'move',title:'海岸列車 青沙浦 → 尾浦',sub:'到尾浦站再走到海雲台',warn:'末班 18:30，別錯過。'},
   {t:'晚餐',k:'food',title:'晚餐二選一',
    alts:[
@@ -448,9 +448,9 @@ const days=[
   {t:'下午',k:'sight',title:'白淺灘文化村',sub:'搭計程車去。海岸散步拍照',nav:'흰여울문화마을'},
   {t:'逛街',k:'sight',title:'樂天百貨・買棉被',sub:'先買棉被（18:00 關）再逛百貨（20:00 關）',both:1,
    alts:[
-    {n:'京信寢具',s:'9:00–18:00',map:G+'LqcPWRtEMcGUQEae8'},
-    {n:'棉被168',s:'9:00–18:00',map:G+'SYmpDmxEc8rgbgoR8'},
-    {n:'樂天百貨',s:'20:00 關',map:G+'EUkLoNjvSMbYo5Me9'}],
+    {n:'京信寢具',s:'9:00–18:00・國際市場一帶',map:G+'LqcPWRtEMcGUQEae8',nav:'35.100662,129.028547',at:[35.100662,129.028547]},
+    {n:'棉被168',s:'9:00–18:00・就在京信寢具旁邊',map:G+'SYmpDmxEc8rgbgoR8',nav:'35.100887,129.028797',at:[35.100887,129.028797]},
+    {n:'樂天百貨 光復店',s:'20:00 關',map:G+'EUkLoNjvSMbYo5Me9',nav:'롯데백화점 광복점'}],
    warn:'棉被店 18:00 就關門。'},
   {t:'傍晚',k:'food',title:'富平罐頭市場',sub:'現場吃小吃：魚板、辣炒年糕',nav:'부평깡통시장',map:G+'99ngue55kk18PCLTA'},
   {t:'晚餐',k:'food',title:'札嘎其市場',sub:'台灣人推薦 100 號攤，吃帝王蟹',nav:'자갈치시장',map:G+'gryHs3EC8gx1ecFg7'},
@@ -576,6 +576,9 @@ const KO={
  '부산바다샌드 해운대':'부산바다샌드 (Busan Bada Sand)',
  '부산 부산진구 서전로38번길 76':'스티커즈 서면전포점',
  '롯데호텔 부산':'롯데호텔 부산 (1층 로비)',
+ '35.100662,129.028547':'국제시장 근처 이불가게 (京信寢具)',
+ '35.100887,129.028797':'국제시장 근처 이불가게 (棉被168)',
+ '롯데백화점 광복점':'롯데백화점 광복점',
  '35.098312,129.032297':'디데이의원 (남포동)',
  '서면역 2호선':'서면역 2호선 (장산 방면)','남천역':'남천역 (2호선)','중동역 2호선':'중동역 (2호선)',
  '부산 수영구 남천동 148-100':'광안리해수욕장 남쪽 끝 (남천동)',
@@ -633,6 +636,7 @@ const ADDR={
 const koOf=q=>KO[q]||q;
 const gNav=q=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(q);
 const gSearch=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
+const naverAt=(lat,lng)=>`https://map.naver.com/p?c=${lng},${lat},19,0,0,0,dh`;
 const nSearch=q=>'https://map.naver.com/p/search/'+encodeURIComponent(koOf(q).replace(/\s*\(.*?\)\s*/g,' ').trim());
 const embed=q=>'https://maps.google.com/maps?q='+encodeURIComponent(q)+'&hl=zh-TW&z=16&output=embed';
 const igTag=p=>{if(p.ig!==undefined)return p.ig;const q=p.nav;if(!q)return '';if(q in IGOVR)return IGOVR[q];if(/^[\d.,]+$/.test(q))return '';return q.replace(/[^\p{L}\p{N}]/gu,'')};
@@ -642,10 +646,11 @@ const mapHtml=q=>q?`<iframe class="mapimg" loading="lazy" title="地圖" referre
 /* the three big actions + small links */
 function acts(p,name){
   if(!p.nav) return linksHtml(p);
+  const nv=p.at?naverAt(...p.at):nSearch(p.nav);
   return `<div class="acts">
-    <a class="act n" href="${nSearch(p.nav)}" target="_blank" rel="noopener">${ic.nav}Naver 導航</a>
+    <a class="act n" href="${nv}" target="_blank" rel="noopener">${ic.nav}Naver 導航</a>
     <a class="act gs" href="${gNav(p.nav)}" target="_blank" rel="noopener">${ic.pin}Google</a>
-    <button type="button" class="act d drv" data-ko="${esc(koOf(p.nav))}" data-zh="${esc(name)}" data-q="${esc(p.nav)}" data-addr="${esc(ADDR[p.nav]||'')}">${ic.taxi}給司機看</button>
+    <button type="button" class="act d drv" data-ko="${esc(koOf(p.nav))}" data-zh="${esc(name)}" data-q="${esc(p.nav)}" data-nv="${esc(nv)}" data-addr="${esc(ADDR[p.nav]||'')}">${ic.taxi}給司機看</button>
   </div>`+linksHtml(p);
 }
 function linksHtml(p){
@@ -991,7 +996,7 @@ document.addEventListener('click',e=>{
   const exp=e.target.closest('.exp');
   if(exp){const o=exp.dataset.open==='1';exp.closest('section').querySelectorAll('details.sd').forEach(d=>{if(d.open!==o)animateDetails(d,o)});return}
   const drv=e.target.closest('.drv');
-  if(drv){$('#dr-ko').textContent=drv.dataset.ko;const ad=drv.dataset.addr;$('#dr-addr').textContent=ad||'地址請以 Naver 地圖為準';$('#dr-addr').classList.toggle('none',!ad);$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=nSearch(drv.dataset.q);document.querySelectorAll('.sheet:not(#sh-driver)').forEach(x=>{x.classList.remove('show');x.hidden=true});openSheet('sh-driver');return}
+  if(drv){$('#dr-ko').textContent=drv.dataset.ko;const ad=drv.dataset.addr;$('#dr-addr').textContent=ad||'地址請以 Naver 地圖為準';$('#dr-addr').classList.toggle('none',!ad);$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=drv.dataset.nv||nSearch(drv.dataset.q);document.querySelectorAll('.sheet:not(#sh-driver)').forEach(x=>{x.classList.remove('show');x.hidden=true});openSheet('sh-driver');return}
   const tvw=e.target.closest('#sh-tview');if(tvw&&(e.target.closest('[data-close]')||e.target===tvw)){tvw.classList.remove('show');setTimeout(()=>tvw.hidden=true,250);return}
   if(e.target.closest('[data-close]')||e.target.classList.contains('sheet')){closeSheets();return}
 });
