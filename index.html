@@ -239,6 +239,18 @@ body.no-maps .mapimg{display:none}
 .tdel{border:1px solid #d33;color:#d33;background:#fff;border-radius:999px;padding:5px 14px;cursor:pointer}
 .tdel.arm{background:#d33;color:#fff}
 .tixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;border:1px dashed var(--sea);color:var(--sea);background:transparent;border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:700;font-size:.85rem}
+
+.nvhead{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.nvhead b{color:var(--ok)}
+.nvlist{list-style:none;margin:0;padding:0}
+.nvlist li{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid var(--line)}
+.nvlist label{flex:1;min-width:0;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.nvlist input{width:20px;height:20px;accent-color:var(--ok);flex:0 0 auto;margin-top:2px}
+.nvlist span{min-width:0}
+.nvlist small{display:block;color:var(--muted);font-size:.76rem;overflow-wrap:anywhere}
+.nvlist input:checked+span b{text-decoration:line-through;color:var(--muted)}
+.nvbtn{flex:0 0 auto;background:var(--b-naver);color:#fff;text-decoration:none;font-weight:700;font-size:.8rem;border-radius:10px;padding:8px 10px}
+.nvweb{flex:0 0 auto;color:var(--muted);font-size:.74rem;text-decoration:none;padding:8px 2px}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -733,6 +745,23 @@ function runSearch(){
   ul.innerHTML=r.length?r.map((x,i)=>`<li><button type="button" data-r="${i}"><b>${esc(x.t)}</b><small>${esc(x.sub)}</small></button></li>`).join(''):'<li class="hint">找不到，換個關鍵字試試</li>';
   ul.onclick=e=>{const b=e.target.closest('button');if(b)r[+b.dataset.r].go()};
 }
+
+/* ================= save-to-Naver checklist ================= */
+function naverPlaces(){
+  const seen=new Map();
+  const add=(nav,name,day)=>{if(!nav)return;const ko=koOf(nav).replace(/\s*\(.*?\)\s*/g,' ').trim();if(seen.has(ko)){seen.get(ko).days.add(day);return}seen.set(ko,{ko,name,days:new Set([day])})};
+  add(LAON.nav,'拉昂酒店','住宿');add(DENBASTA.nav,'西面登巴斯塔中央酒店','住宿');
+  days.forEach(d=>d.stops.forEach(s=>{if(s.k!=='stay')add(s.nav,s.title,d.tab);(s.alts||[]).forEach(a=>add(a.nav,a.n,d.tab))}));
+  return [...seen.values()];
+}
+const nApp=q=>'nmap://search?query='+encodeURIComponent(q)+'&appname='+encodeURIComponent(location.host||'busan-trip');
+function naverListHtml(){
+  const L=naverPlaces();
+  return `<div class="nvhead"><b id="nv-count"></b><span class="sub">點「開 App」→ 在 Naver 地圖按 <b>저장</b>（儲存）→ 回來打勾</span></div>
+  <ul class="nvlist">${L.map((p,i)=>`<li><label><input type="checkbox" class="nvck" data-k="nv-${esc(p.ko)}"><span><b>${esc(p.name)}</b><small>${esc(p.ko)}・${[...p.days].join('、')}</small></span></label>
+  <a class="nvbtn" href="${nApp(p.ko)}">開 App</a><a class="nvweb" href="${nSearch(p.ko)}" target="_blank" rel="noopener" aria-label="用網頁開">網頁</a></li>`).join('')}</ul>`;
+}
+function paintNvCount(){const a=[...document.querySelectorAll('.nvck')];const n=a.filter(x=>x.checked).length;const el=$('#nv-count');if(el)el.textContent=`已存 ${n} / ${a.length}`}
 /* ================= info tab ================= */
 function placeList(arr){
   return arr.map(([n,m,q,map])=>`<div class="place"><div class="title">${esc(n)}</div>${m?`<div class="meta">${esc(m)}</div>`:''}${photoHtml(n)}${q?acts({nav:q,map},n):linksHtml({map})}</div>`).join('');
@@ -761,6 +790,9 @@ function renderInfo(){
 
 <h3>票券夾</h3>
 <div class="card"><div class="sub">機票、膠囊列車 QR Code、釜山 Pass 等截圖，從相簿加進來，只存在這支手機，沒網路也能看。</div><button type="button" class="tixbtn" data-cat="機票">🎫 打開票券夾</button></div>
+
+<h3>存到我的 Naver 地圖</h3>
+<details class="grp"><summary>📍 行程地點清單</summary><div class="inner">${naverListHtml()}</div></details>
 
 <h3>出發前待辦</h3>
 <div class="card">${checklist('todo',['填韓國入境卡 <a href="https://www.e-arrivalcard.go.kr/portal/main/index.do?locale=CH" target="_blank" rel="noopener">點我填寫</a>','保旅平險','買釜山 Pass（二選三方案）','買棉被'])}</div>
@@ -950,6 +982,8 @@ rateEl.addEventListener('input',()=>{store.set('rate',rateEl.value);fromK()});
 $('#cv-chips').innerHTML=[1000,5000,10000,30000,50000].map(v=>`<button type="button" data-v="${v}">₩${v.toLocaleString('en-US')}</button>`).join('');
 $('#cv-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;krwEl.value=b.dataset.v;fromK()});
 
+/* naver checklist */
+document.querySelectorAll('.nvck').forEach(cb=>{cb.checked=store.get(cb.dataset.k,'0')==='1';cb.addEventListener('change',()=>{store.set(cb.dataset.k,cb.checked?'1':'0');paintNvCount()})});paintNvCount();
 /* checklists + display switches */
 document.querySelectorAll('.check input').forEach(cb=>{cb.checked=store.get('ck-'+cb.dataset.k,'0')==='1';cb.addEventListener('change',()=>store.set('ck-'+cb.dataset.k,cb.checked?'1':'0'))});
 [['photos','sw-photos'],['maps','sw-maps']].forEach(([k,id])=>{
