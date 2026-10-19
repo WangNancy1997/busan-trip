@@ -221,6 +221,24 @@ body.no-maps .mapimg{display:none}
 .flash{animation:flash 1.4s var(--ease)}
 @keyframes flash{0%,40%{background:var(--pink-soft)}100%{background:transparent}}
 .hbtn{width:48px;height:48px}
+
+.tcats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tcats button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.85rem}
+.tcats button[aria-pressed="true"]{background:var(--b-sea);color:#fff;border-color:transparent}
+.addt{width:100%;cursor:pointer}
+.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.tgrid button{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:0;overflow:hidden;cursor:pointer;text-align:left}
+.tgrid img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.tgrid span{display:block;font-size:.74rem;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tgrid .empty{grid-column:1/-1;color:var(--muted);font-size:.88rem;text-align:center;padding:24px 0}
+.tview .pane{background:#fff;color:#111;border-radius:0;height:100%;max-height:none;display:flex;flex-direction:column;gap:8px}
+.tview .x{background:#eee;color:#111}
+.tvh,.tvf{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tview img{flex:1;min-height:0;width:100%;object-fit:contain}
+.tview .sub{color:#666}
+.tdel{border:1px solid #d33;color:#d33;background:#fff;border-radius:999px;padding:5px 14px;cursor:pointer}
+.tdel.arm{background:#d33;color:#fff}
+.tixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;border:1px dashed var(--sea);color:var(--sea);background:transparent;border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:700;font-size:.85rem}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -300,6 +318,25 @@ main section.in-l{animation:inL .32s var(--ease)}
   </div>
 </div>
 
+<div class="sheet" id="sh-tix" hidden role="dialog" aria-modal="true" aria-label="票券夾">
+  <div class="pane tix">
+    <h4>票券夾<button type="button" class="x" data-close aria-label="關閉">✕</button></h4>
+    <p class="sub" style="margin:0 0 10px">只存在這支手機裡，不會上傳。沒網路也能打開。</p>
+    <div class="tcats" id="tcats"></div>
+    <label class="act g addt" for="tfile">＋ 從相簿加入票券</label>
+    <input id="tfile" type="file" accept="image/*" multiple hidden>
+    <div class="tgrid" id="tgrid"></div>
+  </div>
+</div>
+
+<div class="sheet tview" id="sh-tview" hidden role="dialog" aria-modal="true" aria-label="票券">
+  <div class="pane">
+    <div class="tvh"><b id="tv-label"></b><button type="button" class="x" data-close aria-label="關閉">✕</button></div>
+    <img id="tv-img" alt="票券">
+    <div class="tvf"><span class="sub">出示時可把螢幕亮度調高</span><button type="button" class="tdel" id="tv-del">刪除</button></div>
+  </div>
+</div>
+
 <div class="sheet" id="sh-sos" hidden role="dialog" aria-modal="true" aria-label="緊急聯絡">
   <div class="pane sos" id="sos-body"></div>
 </div>
@@ -319,7 +356,7 @@ const days=[
  stay:['拉昂酒店 Hotel Laon｜第 1 晚',LAON],
  flow:'金海機場 → SPA LAND 汗蒸幕 → 15:00 入住拉昂 → 計程車去廣安里看夕陽 → 附近晚餐',
  stops:[
-  {t:'06:10',k:'move',title:'抵達金海國際機場',sub:'02:40 桃園起飛。入境卡記得先填好。',nav:'김해국제공항 국제선',
+  {t:'06:10',k:'move',tix:'機票',title:'抵達金海國際機場',sub:'02:40 桃園起飛。入境卡記得先填好。',nav:'김해국제공항 국제선',
    tip:'<b>機場 → SPA LAND｜利木津巴士（現場買票）</b><br>海雲台／機張方向，在「新世界 Centum City」下車步行。航廈 1 樓 2 號乘車處。約 40–60 分，成人 ₩9,500（約 $226）。',
    warn:'機場巴士首班 07:10，出關後不一定趕得上第一班，到時再確認班次。'},
   {t:'09:00',k:'sight',title:'SPA LAND 汗蒸幕',sub:'九點開，比較高級。休息到爽、洗澡、整理變漂亮。',nav:'SPA LAND Centum City',map:G+'TQRK5pEDFSC1Y9jo6',
@@ -341,14 +378,14 @@ const days=[
  flow:'7:30 早餐 → 海岸列車 松亭→尾浦 → 尾浦吃飯逛街 → 16:30 膠囊列車 尾浦→青沙浦 → 海岸列車 青沙浦→尾浦 → 走到海雲台 → 60 秒炸雞 → 計程車回飯店',
  stops:[
   {t:'07:30',k:'food',title:'早餐，前往松亭站'},
-  {t:'09:00',k:'move',title:'海岸列車 松亭站 → 尾浦站',sub:'9 點首班，晚點搭也可以。先換票。',nav:'해운대블루라인파크 송정정거장'},
-  {t:'10:00',k:'sight',title:'釜山 X the SKY',sub:'1 樓換票。10:00–11:30 最適合，避開 12–14 點。',nav:'BUSAN X the SKY',map:G+'jUCb2vzWzJCFnBiR9'},
+  {t:'09:00',k:'move',tix:'海岸列車',title:'海岸列車 松亭站 → 尾浦站',sub:'9 點首班，晚點搭也可以。先換票。',nav:'해운대블루라인파크 송정정거장'},
+  {t:'10:00',k:'sight',tix:'X the SKY',title:'釜山 X the SKY',sub:'1 樓換票。10:00–11:30 最適合，避開 12–14 點。',nav:'BUSAN X the SKY',map:G+'jUCb2vzWzJCFnBiR9'},
   {t:'逛街',k:'food',title:'自然島鹽麵包・Miffy 專門店',sub:'鹽麵包 9:00–22:00｜Miffy 專門店 10:00–19:50',nav:'자연도소금빵 해운대'},
   {t:'午餐',k:'food',title:'看當下排隊狀況選一家',
    alts:[
     {n:'螞蟻家辣炒章魚',s:'24 小時',map:G+'QB1QxPhcYQPwet7e6',nav:'개미집 해운대'},
     {n:'嚴湧帛豬肉湯飯',s:'很多人推',map:G+'PhBVT9U1iWyMXbc88',nav:'엄용백돼지국밥 해운대'}]},
-  {t:'16:30',k:'move',title:'天空膠囊列車 尾浦 → 青沙浦',sub:'16:30–17:00。用 QR Code 換票，YJ 已先購票（票券截圖在 Notion）。',nav:'해운대블루라인파크 미포정거장',link:['Notion 票券',NOTION]},
+  {t:'16:30',k:'move',tix:'膠囊列車',title:'天空膠囊列車 尾浦 → 青沙浦',sub:'16:30–17:00。用 QR Code 換票，YJ 已先購票。',nav:'해운대블루라인파크 미포정거장'},
   {t:'青沙浦',k:'sight',title:'青沙浦拍照・韓版灌籃高手平交道',nav:'청사포정거장',
    alts:[{n:'Liberta',s:'青沙浦站附近咖啡廳｜9:00–19:30',map:G+'Dnv5kHScApFkVtz96',nav:'Liberta Cheongsapo'}]},
   {t:'18:30',k:'move',title:'海岸列車 青沙浦 → 尾浦',sub:'到尾浦站再走到海雲台',warn:'末班 18:30，別錯過。'},
@@ -423,7 +460,7 @@ const days=[
   {t:'14:00',k:'move',title:'回飯店拿行李 → 金海機場',sub:'約 40 分鐘',nav:'김해국제공항 국제선',
    tip:'<b>地鐵</b> 步行 10 分到西面站綠線 → 沙上站 → 轉紫線（輕軌）→ 機場站'},
   {t:'15:00',k:'move',title:'抵達金海機場',sub:'預留退稅、托運、安檢時間，怕退稅人太多'},
-  {t:'18:55',k:'move',title:'起飛 → 20:15 抵達桃園 T2'}
+  {t:'18:55',k:'move',tix:'機票',title:'起飛 → 20:15 抵達桃園 T2'}
  ]}
 ];
 
@@ -609,6 +646,7 @@ function stopHtml(d,s,i){
   if(s.nav) c+=mapHtml(s.nav);
   c+=acts(s,s.title);
   if(s.alts){c+='<div class="alts">'+s.alts.map(a=>`<div class="alt"><div class="an">${esc(a.n)} ${hrsSpan(a.s)}${a.s?`<small>${esc(a.s)}</small>`:''}</div>${photoHtml(a.n)}${mapHtml(a.nav)}${acts(a,a.n)}</div>`).join('')+'</div>'}
+  if(s.tix) c+=`<button type="button" class="tixbtn" data-cat="${s.tix}">🎫 打開${s.tix}票券</button>`;
   if(s.tip) c+=`<div class="tip">${s.tip}</div>`;
   if(s.warn) c+=`<div class="warn">⚠️ ${esc(s.warn)}</div>`;
   if(hoursOf(s.sub)||(s.alts||[]).some(a=>hoursOf(a.s))) c+=`<div class="hnote">營業時間來自筆記，實際以 Naver 地圖為準</div>`;
@@ -720,6 +758,9 @@ function sosHtml(){
 }
 function renderInfo(){
   return `<div class="eyebrow">出發前</div><h2>行前資訊</h2><p class="date">航班・住宿・交通・收藏清單</p>
+
+<h3>票券夾</h3>
+<div class="card"><div class="sub">機票、膠囊列車 QR Code、釜山 Pass 等截圖，從相簿加進來，只存在這支手機，沒網路也能看。</div><button type="button" class="tixbtn" data-cat="機票">🎫 打開票券夾</button></div>
 
 <h3>出發前待辦</h3>
 <div class="card">${checklist('todo',['填韓國入境卡 <a href="https://www.e-arrivalcard.go.kr/portal/main/index.do?locale=CH" target="_blank" rel="noopener">點我填寫</a>','保旅平險','買釜山 Pass（二選三方案）','買棉被'])}</div>
@@ -859,6 +900,7 @@ document.addEventListener('click',e=>{
   if(exp){const o=exp.dataset.open==='1';exp.closest('section').querySelectorAll('details.sd').forEach(d=>{if(d.open!==o)animateDetails(d,o)});return}
   const drv=e.target.closest('.drv');
   if(drv){$('#dr-ko').textContent=drv.dataset.ko;const ad=drv.dataset.addr;$('#dr-addr').textContent=ad||'地址請以 Naver 地圖為準';$('#dr-addr').classList.toggle('none',!ad);$('#dr-zh').textContent=drv.dataset.zh;$('#dr-naver').href=nSearch(drv.dataset.q);document.querySelectorAll('.sheet:not(#sh-driver)').forEach(x=>{x.classList.remove('show');x.hidden=true});openSheet('sh-driver');return}
+  const tvw=e.target.closest('#sh-tview');if(tvw&&(e.target.closest('[data-close]')||e.target===tvw)){tvw.classList.remove('show');setTimeout(()=>tvw.hidden=true,250);return}
   if(e.target.closest('[data-close]')||e.target.classList.contains('sheet')){closeSheets();return}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
@@ -866,6 +908,34 @@ $('#open-sos').addEventListener('click',()=>{$('#sos-body').innerHTML=sosHtml();
 $('#open-search').addEventListener('click',()=>{openSheet('sh-search');runSearch();setTimeout(()=>$('#q').focus(),60)});
 $('#q').addEventListener('input',runSearch);
 $('#open-cv').addEventListener('click',()=>{openSheet('sh-cv');setTimeout(()=>$('#cv-krw').focus(),50)});
+
+
+/* ================= ticket wallet (IndexedDB, this phone only) ================= */
+const TCATS=['機票','膠囊列車','海岸列車','X the SKY','釜山 Pass','其他'];
+let tcat=TCATS[0];
+const tdb=()=>new Promise((res,rej)=>{const r=indexedDB.open('busan-tix',1);r.onupgradeneeded=()=>r.result.createObjectStore('t',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const tx=async(mode,fn)=>{const db=await tdb();return new Promise((res,rej)=>{const t=db.transaction('t',mode);const st=t.objectStore('t');const out=fn(st);t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);t.onerror=()=>rej(t.error)})};
+const urls=[];
+async function paintTix(){
+  const g=$('#tgrid');urls.splice(0).forEach(u=>URL.revokeObjectURL(u));
+  let list=[];try{list=await tx('readonly',st=>st.getAll())}catch(e){g.innerHTML='<div class="empty">這個瀏覽器不能存檔案，請改用 Chrome 或 Safari 一般模式</div>';return}
+  list.sort((a,b)=>TCATS.indexOf(a.cat)-TCATS.indexOf(b.cat)||a.t-b.t);
+  g.innerHTML=list.length?list.map(x=>{const u=URL.createObjectURL(x.blob);urls.push(u);return `<button type="button" data-id="${x.id}"><img src="${u}" alt=""><span>${esc(x.cat)}</span></button>`}).join(''):'<div class="empty">還沒有票券，點上面的按鈕從相簿加入</div>';
+  g._list=list;
+}
+function openTix(cat){if(cat&&TCATS.includes(cat))tcat=cat;$('#tcats').innerHTML=TCATS.map(c=>`<button type="button" aria-pressed="${c===tcat}">${c}</button>`).join('');openSheet('sh-tix');paintTix()}
+$('#tcats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tcat=b.textContent;$('#tcats').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+$('#tfile').addEventListener('change',async e=>{
+  const fs=[...e.target.files];e.target.value='';if(!fs.length)return;
+  try{await tx('readwrite',st=>{fs.forEach((f,i)=>st.put({id:Date.now()+'-'+i,cat:tcat,blob:f,t:Date.now()+i}))});toast(`已加入 ${fs.length} 張`)}catch(err){toast('加入失敗，空間可能不足')}
+  paintTix();
+});
+let tvId=null;
+$('#tgrid').addEventListener('click',e=>{const b=e.target.closest('button[data-id]');if(!b)return;const x=$('#tgrid')._list.find(t=>t.id===b.dataset.id);tvId=x.id;$('#tv-img').src=b.querySelector('img').src;$('#tv-label').textContent=x.cat;const d=$('#tv-del');d.classList.remove('arm');d.textContent='刪除';$('#sh-tview').hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>$('#sh-tview').classList.add('show')))});
+$('#tv-del').addEventListener('click',async e=>{const d=e.currentTarget;if(!d.classList.contains('arm')){d.classList.add('arm');d.textContent='再按一次確認刪除';return}
+  await tx('readwrite',st=>st.delete(tvId));const v=$('#sh-tview');v.classList.remove('show');setTimeout(()=>v.hidden=true,250);paintTix();toast('已刪除')});
+document.addEventListener('click',e=>{const b=e.target.closest('.tixbtn');if(b)openTix(b.dataset.cat)});
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 
 /* converter */
 const rateEl=$('#cv-rate'),krwEl=$('#cv-krw'),twdEl=$('#cv-twd');
