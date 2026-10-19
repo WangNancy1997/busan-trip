@@ -251,6 +251,13 @@ body.no-maps .mapimg{display:none}
 .nvlist input:checked+span b{text-decoration:line-through;color:var(--muted)}
 .nvbtn{flex:0 0 auto;background:var(--b-naver);color:#fff;text-decoration:none;font-weight:700;font-size:.8rem;border-radius:10px;padding:8px 10px}
 .nvweb{flex:0 0 auto;color:var(--muted);font-size:.74rem;text-decoration:none;padding:8px 2px}
+
+.runt{width:100%;border-collapse:collapse;font-size:.86rem;margin-bottom:6px}
+.runt td{border:0;padding:4px 4px;vertical-align:top}
+.runt td:first-child{font-family:var(--f-mono);color:var(--move);white-space:nowrap;width:3.6em;font-weight:700}
+.runl{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.runl a{font-size:.8rem;font-weight:700;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 11px}
+.stop.run .tip{background:var(--sea-soft)}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -411,14 +418,16 @@ const days=[
  note:'膠囊列車與海岸列車建議事先預約、確認末班時間；尾浦與青沙浦之間要預留轉乘時間。'},
 {id:'d3',area:'甘川・西面',date:'2026-10-23',tab:'Day 3',d:'10/23 五',h:'甘川文化村・更換住宿',
  stay:['西面登巴斯塔中央酒店｜第 1 晚',DENBASTA],
- flow:'（晨跑方案 A）05:40 自己跑 海雲台→廣安里 → 07:40 回飯店 → 早點退房 → 移動約 1 小時 → 西面新飯店寄放行李（可先買超商充飢）→ 午餐 → 甘川文化村 → 宵夜',
+ flow:'（可選晨跑 A）→ 早點退房 → 移動約 1 小時 → 西面新飯店寄放行李（可先買超商充飢）→ 午餐 → 甘川文化村 → 宵夜',
  stops:[
-  {t:'05:40',k:'move',title:'拉昂 → 計程車到 X the SKY 入口',sub:'05:15 起床、喝水、吃根香蕉。計程車約 10 分',nav:'BUSAN X the SKY'},
-  {t:'05:55',k:'sight',title:'晨跑方案 A｜自己跑 海雲台 → 廣安里 8.3 km',sub:'二選一，跟 10/24 方案 B 只跑一天。X the SKY 入口 → 海雲台海水浴場 → OPS Marine City → 釜山電影街 → 民樂水邊公園 → 星巴克 Gwangan 水邊公園店 → 廣安里南端。八分速＋拍照約 76 分。06:10 天亮、06:36 日出',nav:'부산 수영구 남천동 148-100',
-   tip:'<b>路線</b> <a href="https://naver.me/xzHMYR9d" target="_blank" rel="noopener">Naver 路線</a>（今天反方向跑）・<a href="https://www.strava.com/routes/3505079411202111512" target="_blank" rel="noopener">Strava</a><br><b>一個人跑</b> 出發前把路線和預計回飯店時間傳給室友；手機、交通卡、一點現金帶在身上',
-   warn:'選這天就取消 10/24 的晨跑。'},
-  {t:'07:15',k:'move',title:'終點 廣安里南端 → 計程車回拉昂',sub:'約 20–25 分，07:40 左右回到飯店，洗澡後整理行李',nav:'35.1776606,129.1972707'},
-
+  {t:'05:40',k:'sight',run:1,title:'🏃 晨跑方案 A｜自己跑 海雲台 → 廣安里',sub:'二選一・8.3 km・約 05:40–07:40',nav:'BUSAN X the SKY',
+   tip:`<table class="runt">
+<tr><td>05:40</td><td>拉昂搭計程車到 <b>X the SKY 入口</b>（約 10 分）</td></tr>
+<tr><td>05:55</td><td>起跑 → 海雲台 → OPS → 電影街 → 民樂 → 星巴克 → <b>廣安里南端</b>（約 76 分）</td></tr>
+<tr><td>07:15</td><td>計程車回拉昂（20–25 分），<b>07:40</b> 到</td></tr>
+</table>
+<div class="runl"><a href="https://naver.me/xzHMYR9d" target="_blank" rel="noopener">Naver 路線（反方向跑）</a><a href="https://www.google.com/maps/dir/?api=1&destination=%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%EB%82%A8%EC%B2%9C%EB%8F%99%20148-100" target="_blank" rel="noopener">終點導航</a><a href="https://www.strava.com/routes/3505079411202111512" target="_blank" rel="noopener">Strava</a></div>
+<div class="sub">06:10 天亮。一個人跑：先把路線傳給室友，帶手機、交通卡、現金。</div>`},
   {t:'11:00',k:'move',title:'拉昂酒店退房',sub:'搭計程車到地鐵松亭站 → 松亭 > 巨堤迎日（約 25 分）→ 轉計程車去飯店'},
   {t:'中午',k:'stay',title:'西面登巴斯塔中央酒店 寄放行李',sub:'途中可買超商早餐',...DENBASTA},
   {t:'午餐',k:'food',title:'放好行李先吃午餐',
@@ -438,17 +447,17 @@ const days=[
  note:'甘川文化村離西面有一段交通時間，建議上午先出發；富平罐頭市場可移到 Day 4，避免兩天重複。'},
 {id:'d4',area:'影島・南浦',date:'2026-10-24',tab:'Day 4',d:'10/24 六',h:'南浦洞・影島海景',
  stay:['西面登巴斯塔中央酒店｜第 2 晚',DENBASTA],
- flow:'（晨跑方案 B）05:25 西面站會合教練 → 05:36 首班車到南川站 → 06:05 晨跑 廣安里→海雲台 8.3 km → 07:20 中洞站搭地鐵 → 08:15 回飯店／10 點出門吃早餐 → 白淺灘文化村、Miffy Cafe → 午餐 → 海景咖啡廳 → 松島海上纜車',
+ flow:'（可選晨跑 B）／10 點出門吃早餐 → 白淺灘文化村、Miffy Cafe → 午餐 → 海景咖啡廳 → 松島海上纜車',
  stops:[
-  {t:'05:25',k:'move',title:'西面站 會合教練',sub:'05:05 起床、喝水、吃根香蕉。在西面站 2 號線「장산 방면」剪票口會合，兩間飯店走過去都約 5–8 分',nav:'서면역 2호선'},
-  {t:'05:36',k:'move',title:'首班車 西面 → 南川站',sub:'2 號線往장산方向，8 站約 16 分。05:52 到南川站，出站走到廣安里沙灘南端約 10 分，當作暖身',nav:'남천역',
-   warn:'05:36 是首班車，錯過下一班是 05:49。'},
-  {t:'06:05',k:'sight',title:'晨跑方案 B｜跟教練 廣安里 → 海雲台 8.3 km',sub:'二選一，跟 10/23 方案 A 只跑一天。起點：廣安里沙灘南端（남천동 148-100）。八分速＋拍照約 76 分。06:11 天亮、06:37 日出（廣安大橋那側）',nav:'부산 수영구 남천동 148-100',
-   tip:'<b>路線</b> <a href="https://naver.me/xzHMYR9d" target="_blank" rel="noopener">Naver 路線（韓文）</a>・<a href="https://naver.me/5hojsi3y" target="_blank" rel="noopener">中文版</a>・<a href="https://www.strava.com/routes/3505079411202111512" target="_blank" rel="noopener">Strava</a><br><b>沿途</b> 廣安水邊公園星巴克 → 民樂水邊公園 → 釜山電影街 → OPS Marine City → 海雲台海水浴場 → X the SKY 入口（終點）<br><b>補水</b> 沿途很多便利商店，輕裝出發'},
-  {t:'07:20',k:'move',title:'終點 X the SKY → 走到中洞站',sub:'走路約 10 分。2 號線中洞站往양산方向，到西面 17 站約 35 分',nav:'중동역 2호선',
-   tip:'<b>想 08:00 準時到</b> 在 X the SKY 直接搭計程車回飯店，約 25 分，07:50 左右到。',
-   warn:'搭地鐵大約 08:15 回到飯店；07:20 還沒到終點，就在海雲台沙灘結束，從海雲台站搭車。'},
-  {t:'08:15',k:'stay',title:'回到飯店・洗澡休息',...DENBASTA},
+  {t:'05:25',k:'sight',run:1,title:'🏃 晨跑方案 B｜跟教練 廣安里 → 海雲台',sub:'二選一・8.3 km・約 05:25–08:15',nav:'서면역 2호선',
+   tip:`<table class="runt">
+<tr><td>05:25</td><td>西面站 2 號線「<b>장산 방면</b>」剪票口會合</td></tr>
+<tr><td>05:36</td><td>首班車到<b>南川站</b>（8 站 16 分），走到廣安里南端</td></tr>
+<tr><td>06:05</td><td>起跑 → 星巴克 → 民樂 → 電影街 → OPS → 海雲台 → <b>X the SKY</b>（約 76 分）</td></tr>
+<tr><td>07:20</td><td>走到<b>中洞站</b>搭 2 號線（往양산）回西面，<b>08:15</b> 到；搭計程車約 07:50 到</td></tr>
+</table>
+<div class="runl"><a href="https://naver.me/xzHMYR9d" target="_blank" rel="noopener">Naver 路線</a><a href="https://www.google.com/maps/dir/?api=1&destination=%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%EB%82%A8%EC%B2%9C%EB%8F%99%20148-100" target="_blank" rel="noopener">起點導航</a><a href="https://www.google.com/maps/dir/?api=1&destination=%EC%A4%91%EB%8F%99%EC%97%AD%202%ED%98%B8%EC%84%A0" target="_blank" rel="noopener">中洞站導航</a><a href="https://www.strava.com/routes/3505079411202111512" target="_blank" rel="noopener">Strava</a></div>
+<div class="sub">06:11 天亮、06:37 日出。07:20 還沒到終點就在海雲台結束，從海雲台站搭車。</div>`},
   {t:'10:30',k:'note',title:'韋茜醫美 D-DAY',sub:'10:30–12:00'},
   {t:'早餐',k:'food',title:'EGG DROP 南浦洞店',sub:'8:00–17:00，可以再找找',map:G+'vAMyNa15eSgsMeyCA',nav:'에그드랍 남포점',
    tip:'<b>地鐵</b> 西面站橘線（往海水浴場方向）→ 南浦站，約 27 分'},
@@ -635,8 +644,8 @@ function linksHtml(p){
 const DUE={ /* times you must not miss */
  d1:[['15:00','入住拉昂酒店']],
  d2:[['16:30','天空膠囊列車出發'],['18:30','海岸列車末班']],
- d3:[['05:40','出發去起點'],['07:15','跑到終點'],['11:00','拉昂酒店退房']],
- d4:[['05:25','西面站會合'],['05:36','首班車'],['07:20','跑到終點'],['10:30','韋茜醫美']],
+ d3:[['11:00','拉昂酒店退房']],
+ d4:[['10:30','韋茜醫美']],
  d5:[['11:00','飯店退房'],['15:00','抵達金海機場'],['18:55','飛機起飛']]
 };
 const pad=n=>String(n).padStart(2,'0');
@@ -674,6 +683,7 @@ function stopHtml(d,s,i){
   const dueTimes=(DUE[d.id]||[]).map(x=>x[0]);
   const isDue=dueTimes.includes(s.t);
   let c='';
+  if(s.run){c=`<div class="tip">${s.tip}</div>`}else{
   c+=photoHtml(s.title);
   if(s.nav) c+=mapHtml(s.nav);
   c+=acts(s,s.title);
@@ -682,10 +692,11 @@ function stopHtml(d,s,i){
   if(s.tip) c+=`<div class="tip">${s.tip}</div>`;
   if(s.warn) c+=`<div class="warn">⚠️ ${esc(s.warn)}</div>`;
   if(hoursOf(s.sub)||(s.alts||[]).some(a=>hoursOf(a.s))) c+=`<div class="hnote">營業時間來自筆記，實際以 Naver 地圖為準</div>`;
+  }
   const badges=(s.alts?`<span class="badge">${s.alts.length} 選 1</span>`:'')+(s.warn||isDue?`<span class="badge warn">${isDue?'⏰ 準時':'⚠️ 注意'}</span>`:'');
   const head=`<span class="kind">${kindLabel[s.k]}</span>${badges}${s.k==='move'?'':hrsSpan(s.sub)}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}`;
   const q=s.nav?`<a class="qnav" href="${gNav(s.nav)}" target="_blank" rel="noopener" aria-label="導航到 ${esc(s.title)}">${ic.nav}導航</a>`:'';
-  return `<li class="stop ${k}${s.nav?'':' no-q'}${isDue?' due':''}${isDone(d.id,i)?' is-done':''}" data-d="${d.id}" data-i="${i}">
+  return `<li class="stop ${k}${s.run?' run':''}${s.nav?'':' no-q'}${isDue?' due':''}${isDone(d.id,i)?' is-done':''}" data-d="${d.id}" data-i="${i}">
     <div class="time">${esc(s.t)}</div>
     <button type="button" class="chk" aria-label="標記完成：${esc(s.title)}" aria-pressed="${isDone(d.id,i)}"><i></i></button>
     ${c?`<details class="sd"><summary>${head}</summary><div class="sdc">${c}</div></details>`:`<div class="plain">${head}</div>`}
@@ -714,7 +725,7 @@ function updateNext(){
     const slot=document.querySelector(`#sec-${d.id} .next-slot`);
     if(!slot) continue;
     if(d.date!==todayStr()){slot.innerHTML='';continue}
-    const idx=d.stops.findIndex((s,i)=>!isDone(d.id,i)&&s.k!=='note');
+    const idx=d.stops.findIndex((s,i)=>!isDone(d.id,i)&&s.k!=='note'&&!s.run);
     const nm=nowMins();
     const due=(DUE[d.id]||[]).map(([t,l])=>({t,l,left:minsOf(t)-nm})).find(x=>x.left>=0);
     const dueHtml=due?`<div class="due">⏰ ${due.t} ${esc(due.l)}・還有 ${fmtLeft(due.left)}</div>`:'';
