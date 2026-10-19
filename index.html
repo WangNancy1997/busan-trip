@@ -266,6 +266,14 @@ body.no-maps .mapimg{display:none}
 .memo-st{position:absolute;right:4px;top:0;font-size:.72rem;color:var(--ok)}
 .memo-prev{font-size:.8rem;color:var(--pink);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nvday{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;background:var(--b-naver);color:#fff;text-decoration:none;font-weight:700;font-size:.86rem;border-radius:12px;min-height:42px}
+
+/* sticky headers for opened items */
+:root{--tabs-h:58px}
+.sd[open]>summary{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--tabs-h));z-index:3;background:var(--bg);
+  box-shadow:calc(-3.2em - 36px) 0 0 var(--bg),64px 0 0 var(--bg),0 1px 0 var(--line);padding-block:6px;border-radius:0}
+.sd[open]>summary .sub{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.sd[open]>summary .memo-prev{display:none}
+details.grp[open]>summary{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--tabs-h));z-index:3;background:var(--surface);border-radius:14px 14px 0 0;box-shadow:0 1px 0 var(--line)}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -307,7 +315,7 @@ main section.in-l{animation:inL .32s var(--ease)}
   <div class="wrap">
     <div class="ttl">
       <h1>釜山之旅</h1>
-      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 23:50</span></p>
+      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 23:55</span></p>
     </div>
     <button type="button" class="hbtn" id="open-search" aria-label="搜尋"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>搜尋</button>
     <button type="button" class="hbtn" id="open-cv" aria-label="韓圜換算"><b>₩</b>換算</button>
@@ -986,6 +994,10 @@ window.addEventListener('resize',movePill);
     if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8&&Date.now()-t0<600){const i=all.findIndex(a=>a.id===current);const j=i+(dx<0?1:-1);if(j>=0&&j<all.length){show(all[j].id,true);try{history.replaceState(null,'','#'+all[j].id)}catch(err){}}}
   },{passive:true});
 })();
+
+/* keep sticky offset equal to the tab bar height */
+function setTabsH(){const n=document.querySelector('nav.tabs');if(n)document.documentElement.style.setProperty('--tabs-h',n.offsetHeight+'px')}
+setTabsH();window.addEventListener('resize',setTabsH);
 /* ================= interactions ================= */
 function toast(t){const el=document.createElement('div');el.className='toast';el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),1600)}
 function openSheet(id){const s=$('#'+id);s.hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add('show')))}
