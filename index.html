@@ -1034,7 +1034,11 @@ setInterval(updateNext,60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderTabs();show(current,false);updateNext()}});
 
 /* offline */
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update()})}).catch(()=>{}));
+  let reloaded=false;const had=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!reloaded){reloaded=true;location.reload()}});
+}
 
 </script>
 </body>
