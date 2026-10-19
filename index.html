@@ -265,6 +265,7 @@ body.no-maps .mapimg{display:none}
 .memo-in:focus{outline:2px solid var(--sea);outline-offset:0;border-color:transparent}
 .memo-st{position:absolute;right:4px;top:0;font-size:.72rem;color:var(--ok)}
 .memo-prev{font-size:.8rem;color:var(--pink);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nvday{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;background:var(--b-naver);color:#fff;text-decoration:none;font-weight:700;font-size:.86rem;border-radius:12px;min-height:42px}
 /* ===== motion ===== */
 *{-webkit-tap-highlight-color:transparent}
 :root{--ease:cubic-bezier(.2,.8,.2,1)}
@@ -306,7 +307,7 @@ main section.in-l{animation:inL .32s var(--ease)}
   <div class="wrap">
     <div class="ttl">
       <h1>釜山之旅</h1>
-      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 22:20</span></p>
+      <p>5天4夜・10/21–10/25 <span class="ver">v10/19 23:30</span></p>
     </div>
     <button type="button" class="hbtn" id="open-search" aria-label="搜尋"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>搜尋</button>
     <button type="button" class="hbtn" id="open-cv" aria-label="韓圜換算"><b>₩</b>換算</button>
@@ -380,7 +381,7 @@ const LAON={nav:'35.1776606,129.1972707',map:G+'iCcaED4jN4E8wfdz9'};
 const DENBASTA={nav:'부산 부산진구 중앙대로691번길 53',link:['Agoda 訂房',AGODA]};
 
 const days=[
-{id:'d1',area:'海雲台・廣安里',date:'2026-10-21',tab:'Day 1',d:'10/21 三',h:'抵達釜山・汗蒸幕放鬆',
+{id:'d1',nv:'https://naver.me/539IQvqd',area:'海雲台・廣安里',date:'2026-10-21',tab:'Day 1',d:'10/21 三',h:'抵達釜山・汗蒸幕放鬆',
  stay:['拉昂酒店 Hotel Laon｜第 1 晚',LAON],
  flow:'金海機場 → SPA LAND 汗蒸幕 → 15:00 入住拉昂 → 計程車去廣安里看夕陽 → 附近晚餐',
  stops:[
@@ -389,7 +390,7 @@ const days=[
    warn:'機場巴士首班 07:10，出關後不一定趕得上第一班，到時再確認班次。'},
   {t:'09:00',k:'sight',title:'SPA LAND 汗蒸幕',sub:'九點開，比較高級。休息到爽、洗澡、整理變漂亮。',nav:'SPA LAND Centum City',map:G+'TQRK5pEDFSC1Y9jo6',
    alts:[{n:'Hill Spa 汗蒸幕',s:'備選｜海景、24 小時行李寄放、館內 7-11 可煮泡麵、露天泡腳池。Klook 折扣碼 MEOWMEOW',nav:'HILL SPA Haeundae',map:G+'HohNAFgBkHkLPgEU6'}],
-   tip:'<b>SPA LAND → 飯店｜叫計程車</b>（約 40 分）。只有公車可到，但不能帶大件行李。'},
+   tip:'<b>SPA LAND → 飯店｜叫計程車</b>（約 40 分）。只有公車可到，但不能帶大件行李。<br><b>買泳衣｜新世界百貨</b> BARREL 在 B2（款式最多、有尼莫款，尺寸常缺）；Nike Swim、arena 在 2 樓（要從 3 樓連廊過去，看館內導覽）。會員 95 折。'},
   {t:'15:00',k:'stay',title:'入住 拉昂酒店',sub:'4 人房 2 晚',...LAON},
   {t:'傍晚',k:'sight',title:'廣安里海灘・夕陽與廣安大橋夜景',sub:'坐計程車去',nav:'광안리해수욕장',map:G+'nTMg8L8LVRdHjjWBA',tip:'<b>回飯店</b> 拉昂酒店在松亭（不在廣安里），從廣安里搭計程車約 20–30 分鐘。'},
   {t:'晚餐',k:'food',title:'廣安里附近晚餐',sub:'原本想吃：烤肉的男子 廣安里店／豚笑 廣安里店／彥陽烤牛肉 釜山家',
@@ -398,14 +399,13 @@ const days=[
     {n:'workingholiday busan',s:'義大利料理｜網友去三次釜山都吃｜9:00–22:30',map:G+'3j1AVFECCLD9iYBr7',nav:'workingholiday busan'},
     {n:'La Feuille',s:'網友推薦麵包店｜9:00–22:30',map:G+'4LpYUd2yrUJx9ECn9',nav:'La Feuille Gwangalli'},
     {n:'Gwanganmok 廣安木 廣安店',s:'網友推薦烤肉｜16:30–00:00',map:G+'oDvySWjdAHrHZDTf7',nav:'광안목 광안점'}]},
-  {t:'備選',k:'sight',title:'釜山 X the SKY',sub:'時間充裕再去，太累就留到 Day 2',nav:'BUSAN X the SKY',map:G+'jUCb2vzWzJCFnBiR9'},
   {t:'夜',k:'note',title:'宵夜、超商，回飯店',sub:'結束後再看要買什麼、怎麼回去'}
  ]},
-{id:'d2',area:'海岸列車',date:'2026-10-22',tab:'Day 2',d:'10/22 四',h:'海岸列車・天空膠囊列車',
+{id:'d2',nv:'https://naver.me/xtNAFPrh',area:'海岸列車',date:'2026-10-22',tab:'Day 2',d:'10/22 四',h:'海岸列車・天空膠囊列車',
  stay:['拉昂酒店 Hotel Laon｜第 2 晚',LAON],
  flow:'7:30 早餐 → 海岸列車 松亭→尾浦 → 尾浦吃飯逛街 → 16:30 膠囊列車 尾浦→青沙浦 → 海岸列車 青沙浦→尾浦 → 走到海雲台 → 60 秒炸雞 → 計程車回飯店',
  stops:[
-  {t:'07:30',k:'food',title:'早餐，前往松亭站'},
+  {t:'07:30',k:'food',title:'飯店早餐，前往松亭站'},
   {t:'09:00',k:'move',tix:'海岸列車',title:'海岸列車 松亭站 → 尾浦站',sub:'9 點首班，晚點搭也可以。先換票。',nav:'해운대블루라인파크 송정정거장'},
   {t:'10:00',k:'sight',tix:'X the SKY',title:'釜山 X the SKY',sub:'1 樓換票。10:00–11:30 最適合，避開 12–14 點。',nav:'BUSAN X the SKY',map:G+'jUCb2vzWzJCFnBiR9'},
   {t:'逛街',k:'food',title:'自然島鹽麵包・Miffy 專門店',sub:'鹽麵包 9:00–22:00｜Miffy 專門店 10:00–19:50',nav:'자연도소금빵 해운대'},
@@ -415,7 +415,7 @@ const days=[
     {n:'嚴湧帛豬肉湯飯',s:'很多人推',map:G+'PhBVT9U1iWyMXbc88',nav:'엄용백돼지국밥 해운대'}]},
   {t:'16:30',k:'move',tix:'膠囊列車',title:'天空膠囊列車 尾浦 → 青沙浦',sub:'16:30–17:00。用 QR Code 換票，YJ 已先購票。',nav:'해운대블루라인파크 미포정거장'},
   {t:'青沙浦',k:'sight',title:'青沙浦拍照・韓版灌籃高手平交道',nav:'청사포정거장',
-   alts:[{n:'Liberta',s:'青沙浦站附近咖啡廳｜9:00–19:30',map:G+'Dnv5kHScApFkVtz96',nav:'Liberta Cheongsapo'}]},
+   alts:[{n:'Liberta',s:'青沙浦站附近咖啡廳｜9:00–19:30',map:G+'Dnv5kHScApFkVtz96',nav:'Liberta Cheongsapo'},{n:'京信棉被',s:'買棉被',map:'https://share.google/eZs3MNJRxReQpCrUr'}]},
   {t:'18:30',k:'move',title:'海岸列車 青沙浦 → 尾浦',sub:'到尾浦站再走到海雲台',warn:'末班 18:30，別錯過。'},
   {t:'晚餐',k:'food',title:'晚餐二選一',
    alts:[
@@ -425,9 +425,9 @@ const days=[
   {t:'宵夜',k:'food',title:'60 秒炸雞 外帶回飯店吃',sub:'搭計程車回飯店，順便買隔天早餐',map:G+'1t8ftJEqctGRM3bF6',nav:'60계치킨 해운대'}
  ],
  note:'膠囊列車與海岸列車建議事先預約、確認末班時間；尾浦與青沙浦之間要預留轉乘時間。'},
-{id:'d3',area:'甘川・西面',date:'2026-10-23',tab:'Day 3',d:'10/23 五',h:'甘川文化村・更換住宿',
+{id:'d3',nv:'https://naver.me/xPYXwSQs',area:'白淺灘・南浦',date:'2026-10-23',tab:'Day 3',d:'10/23 五',h:'換飯店・白淺灘・南浦洞',
  stay:['西面登巴斯塔中央酒店｜第 1 晚',DENBASTA],
- flow:'（可選晨跑 A）→ 早點退房 → 移動約 1 小時 → 西面新飯店寄放行李（可先買超商充飢）→ 午餐 → 甘川文化村 → 宵夜',
+ flow:'（可選晨跑 A）→ 早點退房 → 計程車到西面飯店寄放行李（約 30 分）→ 午餐 → 白淺灘文化村 → 樂天百貨・買棉被 → 富平罐頭市場、札嘎其市場、Olive Young',
  stops:[
   {t:'05:40',k:'sight',run:1,title:'🏃 晨跑方案 A｜自己跑 海雲台 → 廣安里',sub:'二選一・8.3 km・約 05:40–07:40',nav:'BUSAN X the SKY',
    tip:`<table class="runt">
@@ -437,26 +437,29 @@ const days=[
 </table>
 <div class="runl"><a href="https://naver.me/xzHMYR9d" target="_blank" rel="noopener">Naver 路線（反方向跑）</a><a href="https://www.google.com/maps/dir/?api=1&destination=%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%EB%82%A8%EC%B2%9C%EB%8F%99%20148-100" target="_blank" rel="noopener">終點導航</a><a href="https://www.strava.com/routes/3505079411202111512" target="_blank" rel="noopener">Strava</a></div>
 <div class="sub">06:10 天亮。一個人跑：先把路線傳給室友，帶手機、交通卡、現金。</div>`},
-  {t:'11:00',k:'move',title:'拉昂酒店退房',sub:'搭計程車到地鐵松亭站 → 松亭 > 巨堤迎日（約 25 分）→ 轉計程車去飯店'},
-  {t:'中午',k:'stay',title:'西面登巴斯塔中央酒店 寄放行李',sub:'途中可買超商早餐',...DENBASTA},
+  {t:'11:00',k:'move',title:'拉昂酒店退房 → 計程車到西面飯店',sub:'約 30 分',nav:'부산 부산진구 중앙대로691번길 53'},
+  {t:'中午',k:'stay',title:'西面登巴斯塔中央酒店 寄放行李',sub:'可以先買超商充飢',...DENBASTA},
   {t:'午餐',k:'food',title:'放好行李先吃午餐',
    alts:[
     {n:'83獬豸',s:'烤肉',map:G+'yM3MPfkWz9UJGuq8A',nav:'83해치'},
-    {n:'老宅邸 燒肉',s:'',map:G+'e4dJYU7wpDfho87e7'}],
+    {n:'老宅邸 燒肉',s:'',map:G+'e4dJYU7wpDfho87e7'},
+    {n:'螞蟻家 西面一番街直營店',s:'辣炒章魚',map:G+'GBvbDjq2pkBiAFan8',nav:'개미집 서면1번가직영점'}],
    tip:'<b>公車</b> 步行 6 分到公車站，搭 <b>169-1 往西面</b>：西面站.樂天酒店 → 西面附屬商業街'},
-  {t:'下午',k:'sight',title:'甘川文化村・小王子',sub:'拍小王子與彩色房屋',nav:'감천문화마을',map:G+'K6881wJMNg9qQfpx9',
-   tip:'<b>地鐵</b> 西面站橘線（往海水浴場方向）→ 土城站，約 18 分<br><b>轉 2 號公車</b> 釜山大學醫院 → 甘亭小學.甘川文化村，約 7 分'},
-  {t:'宵夜',k:'food',title:'BHC 炸雞 或 60 炸雞',sub:'BHC 12:00–24:00｜60 炸雞 12:00–01:10',nav:'bhc치킨 서면'},
-  {t:'有空',k:'sight',title:'看時間調整：改到週六或安排醫美',
+  {t:'下午',k:'sight',title:'白淺灘文化村',sub:'搭計程車去。海岸散步拍照',nav:'흰여울문화마을'},
+  {t:'逛街',k:'sight',title:'樂天百貨・買棉被',sub:'先買棉被（18:00 關）再逛百貨（20:00 關）',both:1,
    alts:[
-    {n:'富平罐頭市場',s:'現場吃小吃：魚板、辣炒年糕',nav:'부평깡통시장'},
-    {n:'札嘎其市場',s:'台灣人推薦 100 號攤，吃帝王蟹',nav:'자갈치시장'},
-    {n:'Olive Young Gwangbok Town',s:'釜山新開最大間',map:G+'XBBn3JHHKVtAG8J27',nav:'올리브영 광복타운'}]}
- ],
- note:'甘川文化村離西面有一段交通時間，建議上午先出發；富平罐頭市場可移到 Day 4，避免兩天重複。'},
-{id:'d4',area:'影島・南浦',date:'2026-10-24',tab:'Day 4',d:'10/24 六',h:'南浦洞・影島海景',
+    {n:'京信寢具',s:'9:00–18:00',map:G+'LqcPWRtEMcGUQEae8'},
+    {n:'棉被168',s:'9:00–18:00',map:G+'SYmpDmxEc8rgbgoR8'},
+    {n:'樂天百貨',s:'20:00 關',map:G+'EUkLoNjvSMbYo5Me9'}],
+   warn:'棉被店 18:00 就關門。'},
+  {t:'傍晚',k:'food',title:'富平罐頭市場',sub:'現場吃小吃：魚板、辣炒年糕',nav:'부평깡통시장',map:G+'99ngue55kk18PCLTA'},
+  {t:'晚餐',k:'food',title:'札嘎其市場',sub:'台灣人推薦 100 號攤，吃帝王蟹',nav:'자갈치시장',map:G+'gryHs3EC8gx1ecFg7'},
+  {t:'逛街',k:'sight',title:'Olive Young Gwangbok Town',sub:'釜山新開最大間',map:G+'XBBn3JHHKVtAG8J27',nav:'올리브영 광복타운'},
+  {t:'夜',k:'move',title:'回西面飯店',sub:'地鐵 1 號線 南浦站 → 西面站，或搭計程車',nav:'부산 부산진구 중앙대로691번길 53'}
+ ]},
+{id:'d4',nv:'https://naver.me/GtYAMW6c',area:'影島・南浦',date:'2026-10-24',tab:'Day 4',d:'10/24 六',h:'南浦洞・影島海景',
  stay:['西面登巴斯塔中央酒店｜第 2 晚',DENBASTA],
- flow:'（可選晨跑 B）／10 點出門吃早餐 → 12:00–16:00 醫美（韋茜＋YJ）→ 白淺灘文化村、Miffy Cafe → 午餐 → 海景咖啡廳 → 松島海上纜車',
+ flow:'（可選晨跑 B）／10 點出門吃早餐 → 12:00–14:00 醫美（韋茜＋姊姊）→ 午餐 → ARTE MUSEUM、Miffy Cafe → 海景咖啡廳 → 松島海上纜車',
  stops:[
   {t:'05:25',k:'sight',run:1,title:'🏃 晨跑方案 B｜跟教練 廣安里 → 海雲台',sub:'二選一・8.3 km・約 05:25–08:15',nav:'서면역 2호선',
    tip:`<table class="runt">
@@ -469,22 +472,21 @@ const days=[
 <div class="sub">06:11 天亮、06:37 日出。07:20 還沒到終點就在海雲台結束，從海雲台站搭車。</div>`},
   {t:'早餐',k:'food',title:'EGG DROP 南浦洞店',sub:'8:00–17:00，可以再找找',map:G+'vAMyNa15eSgsMeyCA',nav:'에그드랍 남포점',
    tip:'<b>地鐵</b> 西面站橘線（往海水浴場方向）→ 南浦站，約 27 分'},
-  {t:'12:00',k:'sight',title:'醫美 D-DAY（韋茜＋YJ）',sub:'12:00–16:00・디데이의원 D-DAY 皮膚科・整形外科（南浦洞）',nav:'35.098312,129.032297',map:G+'92iXdeQ1qwoyX3kr5',ig:''},
-  {t:'上午',k:'sight',title:'白淺灘文化村',sub:'海岸散步拍照，想泡腳看日落',nav:'흰여울문화마을',
-   tip:'<b>公車 71</b> 札嘎其市場（青鶴洞方向）→ 영선아파트，約 26 分'},
-  {t:'11:00',k:'sight',title:'Miffy Cafe Busan',sub:'11:00–22:00',map:G+'ZQDfFEaUaYuxyBpq7',nav:'Miffy Cafe Busan',
-   tip:'<b>公車 9</b> 白淺灘文化村（青鶴洞）→ 樂天樂天台，約 33 分'},
-  {t:'午餐',k:'food',title:'明星（名聲）一隻雞',sub:'11:00–22:30',map:G+'NnQ5WyzUVMomFDbz9'},
+  {t:'12:00',k:'sight',title:'醫美 D-DAY（韋茜＋姊姊）',sub:'12:00–14:00・디데이의원 D-DAY 皮膚科・整形外科（南浦洞）',nav:'35.098312,129.032297',map:G+'92iXdeQ1qwoyX3kr5',ig:''},
+  {t:'14:00',k:'food',title:'明星（名聲）一隻雞',sub:'11:00–22:30',map:G+'NnQ5WyzUVMomFDbz9'},
+  {t:'下午',k:'sight',title:'ARTE MUSEUM・Miffy Cafe',sub:'都在影島',both:1,
+   alts:[
+    {n:'ARTE MUSEUM Busan',s:'沉浸式美術館｜10:00–20:00',map:G+'kGybegL3sRGnSfM57',nav:'아르떼뮤지엄 부산'},
+    {n:'Miffy Cafe Busan',s:'11:00–22:00',map:G+'ZQDfFEaUaYuxyBpq7',nav:'Miffy Cafe Busan'}]},
   {t:'下午',k:'food',title:'EL16.52 海景咖啡廳',sub:'10:00–21:30',map:G+'f3adkAa2k85hSypd9',nav:'EL16.52 영도',
    tip:'<b>公車 53</b> 影島區廳（水產加工先進化園區）→ 岩南公園'},
   {t:'夕陽',k:'sight',title:'松島海上纜車',sub:'看海景與夕陽，依時間天候調整。Busan Pass 可用。',nav:'송도해상케이블카'},
   {t:'晚餐',k:'food',title:'看會不會餓',sub:'回札嘎其或西面吃',
    alts:[
-    {n:'富平罐頭市場',s:'Day 3 沒去的話可以排這裡',nav:'부평깡통시장'},
-    {n:'札嘎其市場',s:'100 號攤帝王蟹',nav:'자갈치시장'}]}
+    {n:'札嘎其市場',s:'100 號攤帝王蟹',nav:'자갈치시장',map:G+'gryHs3EC8gx1ecFg7'}]}
  ],
  note:'麵包甜點候選：Standard Bread、Who\'s Who MUMU、DIART 土耳其麵包（超想吃）、自然島鹽麵包、Tuoi Gelato（開心果、伯爵茶）。<br>影島、南浦洞、松島之間依實際位置排順序，避免來回折返。<br>今天週六有廣安里無人機表演（原筆記 20:00、22:00，出發前確認場次）。'},
-{id:'d5',area:'田浦・回家',date:'2026-10-25',tab:'Day 5',d:'10/25 日',h:'田浦咖啡街・回家',
+{id:'d5',nv:'https://naver.me/GjylaiYy',area:'田浦・回家',date:'2026-10-25',tab:'Day 5',d:'10/25 日',h:'田浦咖啡街・回家',
  stay:['退房日｜18:55 起飛',DENBASTA],
  flow:'11:00 退房寄放行李 → 田浦咖啡街逛逛吃吃 → 回飯店拿行李（到機場約 40 分）→ 15:00 到機場 → 18:55 起飛',
  stops:[
@@ -492,17 +494,16 @@ const days=[
   {t:'早午餐',k:'food',title:'Your Type Jeonpo',sub:'田浦咖啡街人氣早午餐',nav:'Your Type Jeonpo'},
   {t:'逛街',k:'sight',title:'田浦咖啡街',sub:'最後採買',nav:'전포카페거리',
    alts:[
-    {n:'SD MEDIA 專輯店',s:'9:00–19:00',nav:'SD MEDIA 서면'},
+    {n:'스티커즈 서면전포점',s:'超可愛拍貼機',map:G+'yDttgAasehzEiJut7',nav:'스티커즈 서면전포점'},
+    {n:'SD MEDIA 專輯店',s:'9:00–19:00',map:G+'2dFGYaer2yCDqBS59',nav:'SD MEDIA 서면'},
     {n:'14wagon',s:'網友推推咖啡廳',map:G+'8f1REBosojzCwUUW7',nav:'14wagon Jeonpo'},
     {n:'moody bread market',s:'復古麵包店｜11:00–22:00',map:G+'3jD5wYjbhMWLNAn77',nav:'moody bread market Jeonpo'}]},
-  {t:'午餐',k:'food',title:'午餐參考',sub:'想吃螞蟻家就排中午，免得候位耽誤去機場',
+  {t:'午餐',k:'food',title:'午餐參考',sub:'西面附近吃，別排太久免得耽誤去機場',
    alts:[
-    {n:'螞蟻家（西面店）',s:'9:00–00:30',map:G+'J8xjrck9Mxdh691i7',nav:'개미집 서면점'},
     {n:'春夏秋冬 小麥麵 西面本店',s:'10:00–21:30',map:G+'tY3ofkue8e8S5M947',nav:'춘하추동 밀면 서면본점'},
-    {n:'松亭三代湯飯',s:'24 小時',map:G+'JNprK7Yt6ngp66HY6',nav:'송정3대국밥'},
-    {n:'密陽加山豬肉湯飯 凡一店',s:'CORTIS 同款｜24 小時',map:G+'TiiuUbRUHiC8vDhM6',nav:'밀양가산돼지국밥 범일점'}]},
-  {t:'14:00',k:'move',title:'回飯店拿行李 → 金海機場',sub:'約 40 分鐘',nav:'김해국제공항 국제선',
-   tip:'<b>地鐵</b> 步行 10 分到西面站綠線 → 沙上站 → 轉紫線（輕軌）→ 機場站'},
+    {n:'松亭三代湯飯',s:'24 小時',map:G+'JNprK7Yt6ngp66HY6',nav:'송정3대국밥'}]},
+  {t:'14:00',k:'move',title:'回飯店拿行李 → 搭計程車去機場',sub:'約 40 分鐘',nav:'김해국제공항 국제선',
+   tip:'<b>備案｜地鐵</b> 步行 10 分到西面站 2 號線 → 沙上站 → 轉輕軌 → 機場站'},
   {t:'15:00',k:'move',title:'抵達金海機場',sub:'預留退稅、托運、安檢時間，怕退稅人太多'},
   {t:'18:55',k:'move',tix:'機票',title:'起飛 → 20:15 抵達桃園 T2'}
  ]}
@@ -655,7 +656,7 @@ const DUE={ /* times you must not miss */
  d1:[['15:00','入住拉昂酒店']],
  d2:[['16:30','天空膠囊列車出發'],['18:30','海岸列車末班']],
  d3:[['11:00','拉昂酒店退房']],
- d4:[['12:00','醫美（韋茜＋YJ）']],
+ d4:[['12:00','醫美（韋茜＋姊姊）']],
  d5:[['11:00','飯店退房'],['15:00','抵達金海機場'],['18:55','飛機起飛']]
 };
 const pad=n=>String(n).padStart(2,'0');
@@ -709,7 +710,7 @@ function stopHtml(d,s,i){
   if(hoursOf(s.sub)||(s.alts||[]).some(a=>hoursOf(a.s))) c+=`<div class="hnote">營業時間來自筆記，實際以 Naver 地圖為準</div>`;
   }
   c+=memoBox(d.id,s);
-  const badges=(s.alts?`<span class="badge">${s.alts.length} 選 1</span>`:'')+(s.warn||isDue?`<span class="badge warn">${isDue?'⏰ 準時':'⚠️ 注意'}</span>`:'');
+  const badges=(s.alts?`<span class="badge">${s.both?'都去':s.alts.length+' 選 1'}</span>`:'')+(s.warn||isDue?`<span class="badge warn">${isDue?'⏰ 準時':'⚠️ 注意'}</span>`:'');
   const head=`<span class="kind">${kindLabel[s.k]}</span>${badges}${s.k==='move'?'':hrsSpan(s.sub)}<div class="title">${esc(s.title)}</div>${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}<span class="memo-slot">${memoPrev(memoOf(d.id,s))}</span>`;
   const q=s.nav?`<a class="qnav" href="${gNav(s.nav)}" target="_blank" rel="noopener" aria-label="導航到 ${esc(s.title)}">${ic.nav}導航</a>`:'';
   return `<li class="stop ${k}${s.run?' run':''}${s.nav?'':' no-q'}${isDue?' due':''}${isDone(d.id,i)?' is-done':''}" data-d="${d.id}" data-i="${i}">
@@ -728,6 +729,7 @@ function renderDay(d){
   <div class="next-slot"></div>
   <div class="stay"><span>🛏 ${esc(d.stay[0])}</span>${stayBtn}</div>
   <div class="flow">${esc(d.flow)}</div>
+  ${d.nv?`<a class="nvday" href="${d.nv}" target="_blank" rel="noopener">📍 Naver 當日地圖（${esc(d.tab)} 所有地點）</a>`:''}
   <div class="tools"><span>點圓圈＝完成</span><span><button type="button" class="exp" data-open="1">全部展開</button> <button type="button" class="exp" data-open="0">收合</button></span></div>
   <ol class="timeline">${d.stops.map((s,i)=>stopHtml(d,s,i)).join('')}</ol>
   ${d.note?`<div class="note"><b>提醒</b><br>${d.note}</div>`:''}`;
@@ -870,9 +872,14 @@ function renderInfo(){
 <tr><td><b>每人</b>（多退少補）</td><td class="num"><b>780 元</b></td></tr>
 </table></div></div>
 
+<h3>Naver 每日地圖</h3>
+<div class="grid2">${days.map(d=>`<a class="lk" href="${d.nv}" target="_blank" rel="noopener">${ic.pin}${esc(d.tab)}・${esc(d.area)}</a>`).join('')}</div>
+
 <h3>常用連結</h3>
 <div class="grid2">
 <a class="lk" href="https://www.e-arrivalcard.go.kr/portal/main/index.do?locale=CH" target="_blank" rel="noopener">${ic.ext}韓國入境卡</a>
+<a class="lk" href="https://naver.me/5g4a6BO8" target="_blank" rel="noopener">${ic.pin}Naver 美食收藏</a>
+<a class="lk" href="https://naver.me/5K6GSQxd" target="_blank" rel="noopener">${ic.pin}Naver 景點收藏</a>
 <a class="lk" href="https://www.google.com/maps/@/data=!3m1!4b1!4m2!11m1!2sZ3oj8DdlblAm--GPhp3-wQ" target="_blank" rel="noopener">${ic.pin}一把釜山地圖</a>
 <a class="lk" href="https://liff.line.me/1655320992-Y8GowEpw/g/nYVzdVrf2BrnqA2b4sf63N" target="_blank" rel="noopener">${ic.ext}記帳</a>
 <a class="lk" href="https://www.instagram.com/reel/DS9m4Mzk1Nk/" target="_blank" rel="noopener">${ic.ig}釜山 Pass 攻略</a>
@@ -883,7 +890,7 @@ function renderInfo(){
 <h3>必去候選</h3>
 <div class="card">${checklist('must',['松島海上纜車','廣安里沙灘','廣安里無人機表演（週六才有）','海雲台','膠囊列車','青沙浦','田浦咖啡街','汗蒸幕','白淺灘文化村','甘川洞文化村'])}
 <div class="sub" style="margin-top:6px">有時間再去</div>${checklist('maybe',['Arte Museum Busan','札嘎其市場','X the Sky','樂天百貨'])}</div>
-<div class="card">想做的事：跑步、拍韓服、打醫美（韋茜＋YJ 10/24 12:00–16:00）</div>
+<div class="card">想做的事：跑步、拍韓服、打醫美（韋茜＋姊姊 10/24 12:00–14:00）</div>
 
 <h3>收藏清單</h3>
 <details class="grp"><summary>🎫 景點／體驗</summary><div class="inner">${placeList(sights)}</div></details>
